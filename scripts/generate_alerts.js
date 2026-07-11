@@ -11,8 +11,7 @@ const alerts = files.map(file => {
     const filePath = path.join(alertsDir, file);
     const content = fs.readFileSync(filePath, 'utf-8').replace(/ \\ /g, ' \\\\ ');
     const parsed = toml.parse(content);
-    // Add the filename as a key/id if needed, or just include the parsed object
-    return parsed;
+    return { name: path.basename(file, '.toml'), ...parsed };
 });
 
 const outputContent = `const alerts = ${JSON.stringify(alerts, null, 2)};\n\nmodule.exports = alerts;`;
