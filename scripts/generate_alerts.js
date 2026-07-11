@@ -15,7 +15,11 @@ const alerts = files.map(file =>
 	return { name: path.basename(file, '.toml'), ...parsed };
 });
 
-const outputContent = `var alerts = ${JSON.stringify(alerts, null, '\t')};\n`;
+const outputContent = `function getAlerts()
+{
+	return ${JSON.stringify(alerts, null, '\t')};
+}
+`;
 
 fs.writeFileSync(outputFile, outputContent);
 console.log(`Generated ${outputFile} with ${alerts.length} alerts.`);

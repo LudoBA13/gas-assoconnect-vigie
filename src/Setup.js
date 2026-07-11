@@ -7,7 +7,7 @@ function createSheets()
 {
 	const ss = SpreadsheetApp.getActiveSpreadsheet();
 
-	alerts.forEach(alert =>
+	getAlerts().forEach(alert =>
 	{
 		const sheetName = 'Alert-' + alert.name;
 		let sheet = ss.getSheetByName(sheetName);
