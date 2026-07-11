@@ -23,7 +23,7 @@ function createSheets()
 		if (currentFormula !== alert.formula)
 		{
 			a1Cell.setFormula(alert.formula);
-			SpreadsheetApp.flush(); // Ensure formula change is synced
+			SpreadsheetApp.flush();
 		}
 
 		resizeSheet(sheet);
@@ -35,8 +35,8 @@ function resizeSheet(sheet)
 	const lastRow = sheet.getLastRow();
 	const lastCol = sheet.getLastColumn();
 
-	// Resize rows: data rows + some padding, but minimum 200
-	const targetRows = Math.max(lastRow + 5, 200);
+	// Resize rows: data rows + some padding, but minimum 100
+	const targetRows = Math.max(lastRow + 5, 100);
 	if (sheet.getMaxRows() !== targetRows)
 	{
 		if (targetRows > sheet.getMaxRows())
