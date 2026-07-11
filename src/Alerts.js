@@ -3,6 +3,7 @@ function getAlerts()
 	return [
 	{
 		"name": "CNESSansÉpicerie",
+		"sheetName": "Alert-CNESSansÉpicerie",
 		"type": "issue",
 		"description": "Liste des partenaires qui reçoit des produits CNES de la BA mais ne sont pas type épicerie sociale.",
 		"message": "Le partenaire reçoit des produits CNES mais n'est pas une épicerie sociale.",
@@ -10,6 +11,7 @@ function getAlerts()
 	},
 	{
 		"name": "ConventionExpirée",
+		"sheetName": "Alert-ConventionExpirée",
 		"type": "issue",
 		"description": "Liste des partenaires dont la convention est antérieure à 5 ans.",
 		"message": "La date de dernière signature de convention est antérieure à 5 ans.",
@@ -17,6 +19,7 @@ function getAlerts()
 	},
 	{
 		"name": "HabilitationRégionaleInvalide",
+		"sheetName": "Alert-HabilitationRégionaleInvalide",
 		"type": "issue",
 		"description": "Liste des partenaires qui ne possèdent pas d'habilitation régionale valide. Sont exclus : CCAS/CIAS, membres d'un réseau ayant une habilitation nationale.",
 		"message": "Le partenaire ne possède pas d'habilitation régionale valide.",
@@ -24,6 +27,7 @@ function getAlerts()
 	},
 	{
 		"name": "ÉpicerieFSE",
+		"sheetName": "Alert-ÉpicerieFSE",
 		"type": "issue",
 		"description": "Liste des partenaires de type épicerie sociale qui reçoivent des produits FSE+.",
 		"message": "Le partenaire est une épicerie sociale mais reçoit des produits FSE+.",

@@ -9,7 +9,7 @@ function createSheets()
 
 	getAlerts().forEach(alert =>
 	{
-		const sheetName = 'Alert-' + alert.name;
+		const sheetName = alert.sheetName;
 		let sheet = ss.getSheetByName(sheetName);
 
 		if (!sheet)
