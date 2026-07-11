@@ -1,5 +1,3 @@
-const alerts = require('./Alerts');
-
 function setUpSheets()
 {
 	createSheets();
@@ -28,5 +26,3 @@ function createSheets()
 		}
 	});
 }
-
-module.exports = { setUpSheets };
