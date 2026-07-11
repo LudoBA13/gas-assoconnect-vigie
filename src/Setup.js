@@ -55,3 +55,28 @@ function resizeSheet(sheet)
 		sheet.deleteColumns(lastCol + 1, sheet.getMaxColumns() - lastCol);
 	}
 }
+
+function generateMasterFormula()
+{
+	const alerts = getAlerts();
+	const parts = alerts.map(alert =>
+	{
+		const range = `'${alert.sheetName}'!A2:B100`; // Assuming data in A2:B
+		const message = alert.message;
+		// Logic: If A2 is not empty and not an error (iserror?), include A, B, and message
+		// Using LET for clarity
+		return `LET(
+			data; '${alert.sheetName}'!A2:B200;
+			isValid; NOT(ISBLANK(INDEX(data; 1; 1))) * NOT(ISERROR(INDEX(data; 1; 1)));
+			IF(isValid; HSTACK(data; MAKEARRAY(ROWS(data); 1; LAMBDA(r; c; "${message}"))); IFERROR(1/0))
+		)`;
+	});
+
+	// Stack and remove errors
+	return `=QUERY(VSTACK(${parts.join('; ')}); "where Col1 is not null")`;
+}
+
+function _debugFormula()
+{
+	console.log(generateMasterFormula());
+}
