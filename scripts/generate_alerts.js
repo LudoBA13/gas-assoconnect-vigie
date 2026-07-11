@@ -3,7 +3,7 @@ const path = require('path');
 const toml = require('@iarna/toml');
 
 const alertsDir = path.join(__dirname, '..', 'src', 'alerts');
-const outputFile = path.join(__dirname, '..', 'src', 'alerts.js');
+const outputFile = path.join(__dirname, '..', 'src', 'Alerts.js');
 
 const files = fs.readdirSync(alertsDir).filter(file => file.endsWith('.toml'));
 

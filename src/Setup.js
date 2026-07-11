@@ -1,4 +1,4 @@
-const alerts = require('./alerts');
+const alerts = require('./Alerts');
 
 function setUpSheets()
 {
