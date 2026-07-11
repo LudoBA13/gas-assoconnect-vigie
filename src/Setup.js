@@ -66,7 +66,7 @@ function generateMasterFormula()
 		// Logic: If A2 is not empty and not an error (iserror?), include A, B, and message
 		// Using LET for clarity
 		return `LET(
-			data; '${alert.sheetName}'!A2:B200;
+			data; '${alert.sheetName}'!$A$2:$B;
 			isValid; NOT(ISBLANK(INDEX(data; 1; 1))) * NOT(ISERROR(INDEX(data; 1; 1)));
 			IF(isValid; HSTACK(data; MAKEARRAY(ROWS(data); 1; LAMBDA(r; c; "${message}"))); IFERROR(1/0))
 		)`;
