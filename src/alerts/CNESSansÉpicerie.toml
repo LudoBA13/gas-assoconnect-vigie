@@ -1,0 +1,25 @@
+type = "issue"
+description = "Liste des partenaires qui reçoit des produits CNES de la BA mais ne sont pas type épicerie sociale."
+message = "Le partenaire reçoit des produits CNES mais n'est pas une épicerie sociale."
+formula = """
+=LET(
+  dbHeaders; ACStructures!$1:$1;
+  dbRows;    ACStructures!$2:$200;
+
+  outputHeaders; { "Code VIF" \ "Nom" };
+  outputIndexes; BYCOL(outputHeaders; LAMBDA(colName; MATCH(colName; dbHeaders; 0)));
+
+  typeCol;  INDEX(dbRows; 0; MATCH("Type de structure"; dbHeaders; 0));
+  cnesCol;  INDEX(dbRows; 0; MATCH("Le partenaire reçoit-il des produits CNES ?"; dbHeaders; 0));
+  modesCol; INDEX(dbRows; 0; MATCH("Modes de distribution de l'aide alimentaire"; dbHeaders; 0));
+
+  outputRows; FILTER(
+    CHOOSECOLS(dbRows; outputIndexes);
+    ISNUMBER(FIND("1_Partenaire"; typeCol));
+    ISERR(FIND("Epicerie Sociale"; modesCol));
+    cnesCol = "Oui de la BA"
+  );
+
+  VSTACK(outputHeaders; outputRows)
+)
+"""

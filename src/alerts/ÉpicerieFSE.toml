@@ -1,0 +1,25 @@
+type = "issue"
+description = "Liste des partenaires de type épicerie sociale qui reçoivent des produits FSE+."
+message = "Le partenaire est une épicerie sociale mais reçoit des produits FSE+."
+formula = """
+=LET(
+  dbHeaders; ACStructures!$1:$1;
+  dbRows;    ACStructures!$2:$200;
+
+  outputHeaders; { "Code VIF" \ "Nom" };
+  outputIndexes; BYCOL(outputHeaders; LAMBDA(colName; MATCH(colName; dbHeaders; 0)));
+
+  typeCol;  INDEX(dbRows; 0; MATCH("Type de structure"; dbHeaders; 0));
+  fseCol;   INDEX(dbRows; 0; MATCH("Le partenaire reçoit-il des produits du FSE + ?"; dbHeaders; 0));
+  modesCol; INDEX(dbRows; 0; MATCH("Modes de distribution de l'aide alimentaire"; dbHeaders; 0));
+
+  outputRows; FILTER(
+    CHOOSECOLS(dbRows; outputIndexes);
+    ISNUMBER(FIND("1_Partenaire"; typeCol));
+    ISNUMBER(FIND("Epicerie Sociale"; modesCol));
+    fseCol = "Oui"
+  );
+
+  VSTACK(outputHeaders; outputRows)
+)
+"""
