@@ -52,13 +52,6 @@ function resizeSheet(sheet)
 	// Resize columns: fit to data content
 	if (sheet.getMaxColumns() !== lastCol)
 	{
-		if (lastCol > sheet.getMaxColumns())
-		{
-			sheet.insertColumnsAfter(sheet.getMaxColumns(), lastCol - sheet.getMaxColumns());
-		}
-		else
-		{
-			sheet.deleteColumns(lastCol + 1, sheet.getMaxColumns() - lastCol);
-		}
+		sheet.deleteColumns(lastCol + 1, sheet.getMaxColumns() - lastCol);
 	}
 }
