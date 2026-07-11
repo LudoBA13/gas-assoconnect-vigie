@@ -7,14 +7,15 @@ const outputFile = path.join(__dirname, '..', 'src', 'alerts.js');
 
 const files = fs.readdirSync(alertsDir).filter(file => file.endsWith('.toml'));
 
-const alerts = files.map(file => {
-    const filePath = path.join(alertsDir, file);
-    const content = fs.readFileSync(filePath, 'utf-8').replace(/ \\ /g, ' \\\\ ');
-    const parsed = toml.parse(content);
-    return { name: path.basename(file, '.toml'), ...parsed };
+const alerts = files.map(file =>
+{
+	const filePath = path.join(alertsDir, file);
+	const content = fs.readFileSync(filePath, 'utf-8').replace(/ \\ /g, ' \\\\ ');
+	const parsed = toml.parse(content);
+	return { name: path.basename(file, '.toml'), ...parsed };
 });
 
-const outputContent = `const alerts = ${JSON.stringify(alerts, null, 2)};\n\nmodule.exports = alerts;`;
+const outputContent = `const alerts = ${JSON.stringify(alerts, null, '\t')};\n\nmodule.exports = alerts;`;
 
 fs.writeFileSync(outputFile, outputContent);
 console.log(`Generated ${outputFile} with ${alerts.length} alerts.`);
