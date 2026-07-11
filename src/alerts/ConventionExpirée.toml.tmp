@@ -1,0 +1,25 @@
+type = "issue"
+description = "Liste des partenaires dont la convention est antérieure à 5 ans."
+message = "La date de dernière signature de convention est antérieure à 5 ans."
+formula = """
+=LET(
+  dbHeaders; ACStructures!$1:$1;
+  dbRows;    ACStructures!$2:$1000;
+
+  outputHeaders; { "Code VIF" \ "Nom" \ "Date de la dernière signature de la convention / du contrat" };
+  outputIndexes; BYCOL(outputHeaders; LAMBDA(colName; MATCH(colName; dbHeaders; 0)));
+
+  cutoffDate; EDATE(TODAY(); -60);
+
+  typeCol; INDEX(dbRows; 0; MATCH("Type de structure"; dbHeaders; 0));
+  dateCol; INDEX(dbRows; 0; MATCH("Date de la dernière signature de la convention / du contrat"; dbHeaders; 0));
+
+  outputRows; FILTER(
+    CHOOSECOLS(dbRows; outputIndexes);
+    ISNUMBER(FIND("1_Partenaire"; typeCol));
+    dateCol <= cutoffDate
+  );
+
+  VSTACK(outputHeaders; outputRows)
+)
+"""

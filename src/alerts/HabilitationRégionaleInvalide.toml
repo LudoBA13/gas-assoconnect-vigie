@@ -1,10 +1,10 @@
 type = "issue"
 description = "Liste des partenaires qui ne possèdent pas d'habilitation régionale valide. Sont exclus : CCAS/CIAS, membres d'un réseau ayant une habilitation nationale."
-message = "Le partenaire ne possède pas d'habilitation régionale valide."
+message = "Pas d'habilitation régionale valide."
 formula = """
 =LET(
   dbHeaders; ACStructures!$1:$1;
-  dbRows;    ACStructures!$2:$200;
+  dbRows;    ACStructures!$2:$1000;
 
   outputHeaders; { "Code VIF" \ "Nom" \ "Oui - Date de fin de l'habilitation" };
   outputIndexes; BYCOL(outputHeaders; LAMBDA(colName; MATCH(colName; dbHeaders; 0)));

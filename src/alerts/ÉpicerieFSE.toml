@@ -1,10 +1,10 @@
 type = "issue"
 description = "Liste des partenaires de type épicerie sociale qui reçoivent des produits FSE+."
-message = "Le partenaire est une épicerie sociale mais reçoit des produits FSE+."
+message = "Épicerie sociale mais reçoit des produits FSE+."
 formula = """
 =LET(
   dbHeaders; ACStructures!$1:$1;
-  dbRows;    ACStructures!$2:$200;
+  dbRows;    ACStructures!$2:$1000;
 
   outputHeaders; { "Code VIF" \ "Nom" };
   outputIndexes; BYCOL(outputHeaders; LAMBDA(colName; MATCH(colName; dbHeaders; 0)));
