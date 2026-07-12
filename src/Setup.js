@@ -101,7 +101,7 @@ function generateMasterFormula()
 	let formula = '=VSTACK({"Alerte" \\ "Code VIF" \\ "Nom" \\ "Message" }; ';
 
 	// Stack and remove errors
-	formula += `QUERY(VSTACK(${parts.join('; ')}); "where Col2 is not null order by Col2 asc, Col1 asc")`;
+	formula += `QUERY(VSTACK(${parts.join('; ')}); "where Col3 is not null order by Col3 asc, Col1 asc")`;
 
 	return formula + ')';
 }
