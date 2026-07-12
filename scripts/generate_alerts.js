@@ -25,19 +25,19 @@ function generateMasterFormula(alerts)
 				const colIndex = parseInt(part.substring(1));
 				return `INDEX(data; r; ${colIndex})`;
 			}
-			return `""${part.replace(/"/g, '""')}""`;
+			return `"${part.replace(/"/g, '""')}"`;
 		});
 		const formulaMessage = messageParts.join(' & ');
 
 		return `LET(
 			data; '${alert.sheetName}'!$A$2:$Z;
 			validRows; FILTER(data; NOT(ISBLANK(INDEX(data; 0; 1))) * NOT(ISERROR(INDEX(data; 0; 1))));
-			HSTACK(MAKEARRAY(ROWS(validRows); 1; LAMBDA(r; c; ""${alert.name}"")); CHOOSECOLS(validRows; 1; 2); MAKEARRAY(ROWS(validRows); 1; LAMBDA(r; c; ${formulaMessage})))
+			HSTACK(MAKEARRAY(ROWS(validRows); 1; LAMBDA(r; c; "${alert.name}")); CHOOSECOLS(validRows; 1; 2); MAKEARRAY(ROWS(validRows); 1; LAMBDA(r; c; ${formulaMessage})))
 		)`;
 	});
 
 	// Stack and remove errors
-	return `=QUERY(VSTACK(${parts.join('; ')}); ""where Col2 is not null order by Col2 asc, Col1 asc"")`;
+	return `=QUERY(VSTACK(${parts.join('; ')}); "where Col2 is not null order by Col2 asc, Col1 asc")`;
 }
 
 const masterFormula = generateMasterFormula(alerts);
@@ -49,7 +49,7 @@ const outputContent = `function getAlerts()
 
 function getMasterFormula()
 {
-	return "${masterFormula.replace(/"/g, '\\"')}";
+	return '${masterFormula.replace(/'/g, "\\'")}';
 }
 `;
 
