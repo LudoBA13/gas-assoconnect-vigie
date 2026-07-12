@@ -3,6 +3,65 @@ function setUpSheets()
 	createAlertSheets();
 	removeUnusedAlertSheets();
 	createIndexSheet();
+	createAlertIndexSheet();
+}
+
+// ... (existing code for createSheets, removeSheets, resizeSheet, generateMasterFormula, etc.)
+
+function createIndexSheet()
+{
+	const ss = SpreadsheetApp.getActiveSpreadsheet();
+	let sheet = ss.getSheetByName('Index');
+
+	if (sheet)
+	{
+		return;
+	}
+
+	sheet = ss.insertSheet('Index', 0);
+	sheet.setFrozenRows(1);
+	sheet.setColumnWidths(1, 4, [140, 70, 240, 480]);
+	sheet.setRowHeights(1, 200, 21); // Set default row height if needed, or omit
+	sheet.setMaxColumns(4);
+	sheet.setMaxRows(200);
+
+	const headerRange = sheet.getRange(1, 1, 1, 4);
+	headerRange.setBackground('#4a86e8')
+		.setFontColor('white')
+		.setFontWeight('bold')
+		.setHorizontalAlignment('center')
+		.setVerticalAlignment('middle');
+}
+
+function createAlertIndexSheet()
+{
+	const ss = SpreadsheetApp.getActiveSpreadsheet();
+	let sheet = ss.getSheetByName('Alerts');
+
+	if (!sheet)
+	{
+		sheet = ss.insertSheet('Alerts');
+	}
+
+	sheet.setMaxColumns(4);
+	sheet.setMaxRows(40);
+
+	const alerts = getAlerts();
+	const data = [["Name", "Type", "Description", "Sheet Name"]];
+	alerts.forEach(a =>
+	{
+		data.push([a.name, a.type, a.description, a.sheetName]);
+	});
+
+	const range = sheet.getRange(1, 1, data.length, 4);
+	const currentValues = range.getValues();
+
+	// Compare and update
+	if (JSON.stringify(currentValues) !== JSON.stringify(data))
+	{
+		sheet.clearContents();
+		range.setValues(data);
+	}
 }
 
 function createIndexSheet()
