@@ -63,7 +63,8 @@ function generateMasterFormula()
 	{
 		const messageParts = alert.message.split(/(\$\d+)/g).map(part =>
 		{
-			if (part.startsWith('$')) {
+			if (part.startsWith('$'))
+			{
 				const colIndex = parseInt(part.substring(1));
 				return `INDEX(data; r; ${colIndex})`;
 			}
