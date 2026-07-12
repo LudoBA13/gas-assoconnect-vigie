@@ -61,14 +61,19 @@ function generateMasterFormula()
 	const alerts = getAlerts();
 	const parts = alerts.map(alert =>
 	{
-		const range = `'${alert.sheetName}'!A2:B100`; // Assuming data in A2:B
-		const message = alert.message;
-		// Logic: If A2 is not empty and not an error (iserror?), include A, B, and message
-		// Using LET for clarity
+		const messageParts = alert.message.split(/(\$\d+)/g).map(part => {
+			if (part.startsWith('$')) {
+				const colIndex = parseInt(part.substring(1));
+				return `INDEX(data; r; ${colIndex})`;
+			}
+			return `"${part.replace(/"/g, '""')}"`;
+		});
+		const formulaMessage = messageParts.join(' & ');
+
 		return `LET(
-			data; '${alert.sheetName}'!$A$2:$B;
+			data; '${alert.sheetName}'!$A$2:$Z;
 			isValid; NOT(ISBLANK(INDEX(data; 1; 1))) * NOT(ISERROR(INDEX(data; 1; 1)));
-			IF(isValid; HSTACK(MAKEARRAY(ROWS(data); 1; LAMBDA(r; c; "${alert.name}")); data; MAKEARRAY(ROWS(data); 1; LAMBDA(r; c; "${message}"))); IFERROR(1/0))
+			IF(isValid; HSTACK(MAKEARRAY(ROWS(data); 1; LAMBDA(r; c; "${alert.name}")); CHOOSECOLS(data; 1; 2); MAKEARRAY(ROWS(data); 1; LAMBDA(r; c; ${formulaMessage}))); IFERROR(1/0))
 		)`;
 	});
 
