@@ -72,10 +72,10 @@ function generateMasterFormula()
 
 		return `LET(
 			data; '${alert.sheetName}'!$A$2:$Z;
-			isValid; NOT(ISBLANK(INDEX(data; 1; 1))) * NOT(ISERROR(INDEX(data; 1; 1)));
-			IF(isValid; HSTACK(MAKEARRAY(ROWS(data); 1; LAMBDA(r; c; "${alert.name}")); CHOOSECOLS(data; 1; 2); MAKEARRAY(ROWS(data); 1; LAMBDA(r; c; ${formulaMessage}))); IFERROR(1/0))
+			validRows; FILTER(data; NOT(ISBLANK(INDEX(data; 0; 1))) * NOT(ISERROR(INDEX(data; 0; 1))));
+			HSTACK(MAKEARRAY(ROWS(validRows); 1; LAMBDA(r; c; "${alert.name}")); CHOOSECOLS(validRows; 1; 2); MAKEARRAY(ROWS(validRows); 1; LAMBDA(r; c; ${formulaMessage})))
 		)`;
-	});
+		});
 
 	// Stack and remove errors
 	return `=QUERY(VSTACK(${parts.join('; ')}); "where Col2 is not null order by Col2 asc, Col1 asc")`;
