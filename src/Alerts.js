@@ -65,30 +65,30 @@ function getMasterFormula()
 	return "=QUERY(VSTACK(LET(
 			data; 'Alert-CNESSansÉpicerie'!$A$2:$Z;
 			validRows; FILTER(data; NOT(ISBLANK(INDEX(data; 0; 1))) * NOT(ISERROR(INDEX(data; 0; 1))));
-			HSTACK(MAKEARRAY(ROWS(validRows); 1; LAMBDA(r; c; ""CNESSansÉpicerie"")); CHOOSECOLS(validRows; 1; 2); MAKEARRAY(ROWS(validRows); 1; LAMBDA(r; c; ""Reçoit des produits CNES mais n'est pas une épicerie sociale."")))
+			HSTACK(MAKEARRAY(ROWS(validRows); 1; LAMBDA(r; c; \"\"CNESSansÉpicerie\"\")); CHOOSECOLS(validRows; 1; 2); MAKEARRAY(ROWS(validRows); 1; LAMBDA(r; c; \"\"Reçoit des produits CNES mais n'est pas une épicerie sociale.\"\")))
 		); LET(
 			data; 'Alert-ConventionExpirée'!$A$2:$Z;
 			validRows; FILTER(data; NOT(ISBLANK(INDEX(data; 0; 1))) * NOT(ISERROR(INDEX(data; 0; 1))));
-			HSTACK(MAKEARRAY(ROWS(validRows); 1; LAMBDA(r; c; ""ConventionExpirée"")); CHOOSECOLS(validRows; 1; 2); MAKEARRAY(ROWS(validRows); 1; LAMBDA(r; c; ""La date de dernière signature de convention est antérieure à 5 ans."")))
+			HSTACK(MAKEARRAY(ROWS(validRows); 1; LAMBDA(r; c; \"\"ConventionExpirée\"\")); CHOOSECOLS(validRows; 1; 2); MAKEARRAY(ROWS(validRows); 1; LAMBDA(r; c; \"\"La date de dernière signature de convention est antérieure à 5 ans.\"\")))
 		); LET(
 			data; 'Alert-HabilitationInvalide'!$A$2:$Z;
 			validRows; FILTER(data; NOT(ISBLANK(INDEX(data; 0; 1))) * NOT(ISERROR(INDEX(data; 0; 1))));
-			HSTACK(MAKEARRAY(ROWS(validRows); 1; LAMBDA(r; c; ""HabilitationInvalide"")); CHOOSECOLS(validRows; 1; 2); MAKEARRAY(ROWS(validRows); 1; LAMBDA(r; c; ""Absence d'habilitation valide."")))
+			HSTACK(MAKEARRAY(ROWS(validRows); 1; LAMBDA(r; c; \"\"HabilitationInvalide\"\")); CHOOSECOLS(validRows; 1; 2); MAKEARRAY(ROWS(validRows); 1; LAMBDA(r; c; \"\"Absence d'habilitation valide.\"\")))
 		); LET(
 			data; 'Alert-HabilitationRégionaleExpirée'!$A$2:$Z;
 			validRows; FILTER(data; NOT(ISBLANK(INDEX(data; 0; 1))) * NOT(ISERROR(INDEX(data; 0; 1))));
-			HSTACK(MAKEARRAY(ROWS(validRows); 1; LAMBDA(r; c; ""HabilitationRégionaleExpirée"")); CHOOSECOLS(validRows; 1; 2); MAKEARRAY(ROWS(validRows); 1; LAMBDA(r; c; ""Habilitation régionale invalide."")))
+			HSTACK(MAKEARRAY(ROWS(validRows); 1; LAMBDA(r; c; \"\"HabilitationRégionaleExpirée\"\")); CHOOSECOLS(validRows; 1; 2); MAKEARRAY(ROWS(validRows); 1; LAMBDA(r; c; \"\"Habilitation régionale invalide.\"\")))
 		); LET(
 			data; 'Alert-HabilitationRégionaleIncohérente'!$A$2:$Z;
 			validRows; FILTER(data; NOT(ISBLANK(INDEX(data; 0; 1))) * NOT(ISERROR(INDEX(data; 0; 1))));
-			HSTACK(MAKEARRAY(ROWS(validRows); 1; LAMBDA(r; c; ""HabilitationRégionaleIncohérente"")); CHOOSECOLS(validRows; 1; 2); MAKEARRAY(ROWS(validRows); 1; LAMBDA(r; c; ""Habilitation régionale incohérente. Statut : '"" & INDEX(data; r; 3) & ""'. Date : '"" & INDEX(data; r; 4) & ""'."")))
+			HSTACK(MAKEARRAY(ROWS(validRows); 1; LAMBDA(r; c; \"\"HabilitationRégionaleIncohérente\"\")); CHOOSECOLS(validRows; 1; 2); MAKEARRAY(ROWS(validRows); 1; LAMBDA(r; c; \"\"Habilitation régionale incohérente. Statut : '\"\" & INDEX(data; r; 3) & \"\"'. Date : '\"\" & INDEX(data; r; 4) & \"\"'.\"\")))
 		); LET(
 			data; 'Alert-SIRETInvalide'!$A$2:$Z;
 			validRows; FILTER(data; NOT(ISBLANK(INDEX(data; 0; 1))) * NOT(ISERROR(INDEX(data; 0; 1))));
-			HSTACK(MAKEARRAY(ROWS(validRows); 1; LAMBDA(r; c; ""SIRETInvalide"")); CHOOSECOLS(validRows; 1; 2); MAKEARRAY(ROWS(validRows); 1; LAMBDA(r; c; ""SIRET manquant ou invalide."")))
+			HSTACK(MAKEARRAY(ROWS(validRows); 1; LAMBDA(r; c; \"\"SIRETInvalide\"\")); CHOOSECOLS(validRows; 1; 2); MAKEARRAY(ROWS(validRows); 1; LAMBDA(r; c; \"\"SIRET manquant ou invalide.\"\")))
 		); LET(
 			data; 'Alert-ÉpicerieFSE'!$A$2:$Z;
 			validRows; FILTER(data; NOT(ISBLANK(INDEX(data; 0; 1))) * NOT(ISERROR(INDEX(data; 0; 1))));
-			HSTACK(MAKEARRAY(ROWS(validRows); 1; LAMBDA(r; c; ""ÉpicerieFSE"")); CHOOSECOLS(validRows; 1; 2); MAKEARRAY(ROWS(validRows); 1; LAMBDA(r; c; ""Épicerie sociale mais reçoit des produits FSE+."")))
-		)); ""where Col2 is not null order by Col2 asc, Col1 asc"")";
+			HSTACK(MAKEARRAY(ROWS(validRows); 1; LAMBDA(r; c; \"\"ÉpicerieFSE\"\")); CHOOSECOLS(validRows; 1; 2); MAKEARRAY(ROWS(validRows); 1; LAMBDA(r; c; \"\"Épicerie sociale mais reçoit des produits FSE+.\"\")))
+		)); \"\"where Col2 is not null order by Col2 asc, Col1 asc\"\")";
 }
