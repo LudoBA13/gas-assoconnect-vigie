@@ -1,5 +1,5 @@
 type = "issue"
-description = "Liste des partenaires dont le numéro SIRET est manquant ou invalide. (14 chiffres dont clé Luhn)"
+description = "Partenaires dont le numéro SIRET est manquant ou invalide. (14 chiffres dont clé Luhn)"
 message = "SIRET manquant ou invalide."
 formula = """
 =LET(

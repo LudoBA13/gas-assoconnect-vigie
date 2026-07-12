@@ -1,5 +1,5 @@
 type = "issue"
-description = "Liste des partenaires dont la convention est antérieure à 5 ans."
+description = "Partenaires dont la convention est antérieure à 5 ans."
 message = "La date de dernière signature de convention est antérieure à 5 ans."
 formula = """
 =LET(

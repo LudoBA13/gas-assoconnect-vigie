@@ -1,5 +1,5 @@
 type = "issue"
-description = "Liste des partenaires de type épicerie sociale qui reçoivent des produits FSE+."
+description = "Partenaires de type épicerie sociale qui reçoivent des produits FSE+."
 message = "Épicerie sociale mais reçoit des produits FSE+."
 formula = """
 =LET(

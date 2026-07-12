@@ -1,5 +1,5 @@
 type = "issue"
-description = "Liste des partenaires dont l'habilitation régionale est expirée."
+description = "Partenaires dont l'habilitation régionale est expirée."
 message = "Habilitation régionale expirée."
 formula = """
 =LET(

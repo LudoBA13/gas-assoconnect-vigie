@@ -1,5 +1,5 @@
 type = "warning"
-description = "Liste des partenaires dont l'habilitation régionale est incorrectement configurée. Le statut de l'habilitation régionale 'Oui'/'Non' doit être cohérent avec la présence d'une date de fin d'habilitation."
+description = "Partenaires dont l'habilitation régionale est incorrectement configurée. Le statut de l'habilitation régionale 'Oui'/'Non' doit être cohérent avec la présence d'une date de fin d'habilitation."
 message = "Habilitation régionale incohérente. Statut : '$3'. Date : '$4'."
 formula = """
 =LET(
