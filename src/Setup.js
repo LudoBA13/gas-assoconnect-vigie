@@ -68,12 +68,12 @@ function generateMasterFormula()
 		return `LET(
 			data; '${alert.sheetName}'!$A$2:$B;
 			isValid; NOT(ISBLANK(INDEX(data; 1; 1))) * NOT(ISERROR(INDEX(data; 1; 1)));
-			IF(isValid; HSTACK(data; MAKEARRAY(ROWS(data); 1; LAMBDA(r; c; "${message}"))); IFERROR(1/0))
+			IF(isValid; HSTACK(MAKEARRAY(ROWS(data); 1; LAMBDA(r; c; "${alert.name}")); data; MAKEARRAY(ROWS(data); 1; LAMBDA(r; c; "${message}"))); IFERROR(1/0))
 		)`;
 	});
 
 	// Stack and remove errors
-	return `=QUERY(VSTACK(${parts.join('; ')}); "where Col1 is not null")`;
+	return `=QUERY(VSTACK(${parts.join('; ')}); "where Col2 is not null")`;
 }
 
 function _debugFormula()
