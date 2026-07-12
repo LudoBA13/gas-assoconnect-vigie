@@ -15,7 +15,7 @@ function getAlerts()
 		"type": "issue",
 		"description": "Liste des partenaires dont la convention est antérieure à 5 ans.",
 		"message": "La date de dernière signature de convention est antérieure à 5 ans.",
-		"formula": "=LET(\n  dbHeaders; ACStructures!$1:$1;\n  dbRows;    ACStructures!$2:$200;\n\n  outputHeaders; { \"Code VIF\" \\ \"Nom\" \\ \"Date de la dernière signature de la convention / du contrat\" };\n  outputIndexes; BYCOL(outputHeaders; LAMBDA(colName; MATCH(colName; dbHeaders; 0)));\n\n  cutoffDate; EDATE(TODAY(); -60);\n\n  typeCol; INDEX(dbRows; 0; MATCH(\"Type de structure\"; dbHeaders; 0));\n  dateCol; INDEX(dbRows; 0; MATCH(\"Date de la dernière signature de la convention / du contrat\"; dbHeaders; 0));\n\n  outputRows; FILTER(\n    CHOOSECOLS(dbRows; outputIndexes);\n    ISNUMBER(FIND(\"1_Partenaire\"; typeCol));\n    dateCol <= cutoffDate\n  );\n\n  VSTACK(outputHeaders; outputRows)\n)\n"
+		"formula": "=LET(\n  dbHeaders; ACStructures!$1:$1;\n  dbRows;    ACStructures!$2:$1000;\n\n  outputHeaders; { \"Code VIF\" \\ \"Nom\" \\ \"Date de la dernière signature de la convention / du contrat\" };\n  outputIndexes; BYCOL(outputHeaders; LAMBDA(colName; MATCH(colName; dbHeaders; 0)));\n\n  cutoffDate; EDATE(TODAY(); -60);\n\n  typeCol; INDEX(dbRows; 0; MATCH(\"Type de structure\"; dbHeaders; 0));\n  dateCol; INDEX(dbRows; 0; MATCH(\"Date de la dernière signature de la convention / du contrat\"; dbHeaders; 0));\n\n  outputRows; FILTER(\n    CHOOSECOLS(dbRows; outputIndexes);\n    ISNUMBER(FIND(\"1_Partenaire\"; typeCol));\n    dateCol <= cutoffDate\n  );\n\n  VSTACK(outputHeaders; outputRows)\n)\n"
 	},
 	{
 		"name": "HabilitationRégionaleInvalide",
@@ -24,6 +24,14 @@ function getAlerts()
 		"description": "Liste des partenaires qui ne possèdent pas d'habilitation régionale valide. Sont exclus : CCAS/CIAS, membres d'un réseau ayant une habilitation nationale.",
 		"message": "Pas d'habilitation régionale valide.",
 		"formula": "=LET(\n  dbHeaders; ACStructures!$1:$1;\n  dbRows;    ACStructures!$2:$1000;\n\n  outputHeaders; { \"Code VIF\" \\ \"Nom\" \\ \"Oui - Date de fin de l'habilitation\" };\n  outputIndexes; BYCOL(outputHeaders; LAMBDA(colName; MATCH(colName; dbHeaders; 0)));\n\n  cutoffDate; TODAY();\n\n  typeCol;    INDEX(dbRows; 0; MATCH(\"Type de structure\"; dbHeaders; 0));\n  dateCol;    INDEX(dbRows; 0; MATCH(\"Oui - Date de fin de l'habilitation\"; dbHeaders; 0));\n  networkCol; INDEX(dbRows; 0; MATCH(\"Appartient-il à un grand réseau ayant une habilitation nationale ?\"; dbHeaders; 0));\n  statusCol;  INDEX(dbRows; 0; MATCH(\"Statut\"; dbHeaders; 0));\n\n  outputRows; FILTER(\n    CHOOSECOLS(dbRows; outputIndexes);\n    ISNUMBER(FIND(\"1_Partenaire\"; typeCol));\n    dateCol <= cutoffDate;\n    networkCol = \"1- NON\";\n    statusCol <> \"CCAS/CIAS\"\n  );\n\n  VSTACK(outputHeaders; outputRows)\n)\n"
+	},
+	{
+		"name": "SIRETInvalide",
+		"sheetName": "Alert-SIRETInvalide",
+		"type": "issue",
+		"description": "Liste des partenaires dont le numéro SIRET est manquant ou invalide. (14 chiffres dont clé Luhn)",
+		"message": "SIRET manquant ou invalide.",
+		"formula": "=LET(\n  dbHeaders; ACStructures!$1:$1;\n  dbRows;    ACStructures!$2:$1000;\n\n  outputHeaders; { \"Code VIF\" \\ \"Nom\" };\n  outputIndexes; BYCOL(outputHeaders; LAMBDA(colName; MATCH(colName; dbHeaders; 0)));\n\n  typeCol;    INDEX(dbRows; 0; MATCH(\"Type de structure\"; dbHeaders; 0));\n  siretCol;   INDEX(dbRows; 0; MATCH(\"Siret\"; dbHeaders; 0));\n  siretValid; MAP(siretCol; LAMBDA(siret; \n    IF(OR(ISBLANK(siret); NOT(ISNUMBER(siret)); siret < 10000000000000; siret > 99999999999999); FALSE; \n      LET(\n        str; TO_TEXT(siret);\n        numLen; LEN(str);\n        digits; MID(str; SEQUENCE(numLen); 1);\n        revDigits; INDEX(digits; SEQUENCE(numLen; 1; numLen; -1));\n        processed; MAP(SEQUENCE(ROWS(revDigits)); LAMBDA(idx;\n          LET(\n            d; VALUE(INDEX(revDigits; idx));\n            IF(ISODD(idx); d; IF(d * 2 > 9; (d * 2) - 9; d * 2))\n          )\n        ));\n        MOD(SUM(processed); 10) = 0\n      )\n    )\n  ));\n  \n  outputRows; FILTER(\n    CHOOSECOLS(dbRows; outputIndexes);\n    ISNUMBER(FIND(\"1_Partenaire\"; typeCol));\n    NOT(siretValid)\n  );\n\n  VSTACK(outputHeaders; outputRows)\n)\n"
 	},
 	{
 		"name": "ÉpicerieFSE",

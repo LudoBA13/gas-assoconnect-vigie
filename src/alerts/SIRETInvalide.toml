@@ -1,0 +1,39 @@
+type = "issue"
+description = "Liste des partenaires dont le numéro SIRET est manquant ou invalide. (14 chiffres dont clé Luhn)"
+message = "SIRET manquant ou invalide."
+formula = """
+=LET(
+  dbHeaders; ACStructures!$1:$1;
+  dbRows; ACStructures!$2:$1000;
+
+  outputHeaders; { "Code VIF" \ "Nom" };
+  outputIndexes; BYCOL(outputHeaders; LAMBDA(colName; MATCH(colName; dbHeaders; 0)));
+
+  typeCol;  INDEX(dbRows; 0; MATCH("Type de structure"; dbHeaders; 0));
+  siretCol; INDEX(dbRows; 0; MATCH("Siret"; dbHeaders; 0));
+  
+  siretValid; MAP(siretCol; LAMBDA(siret; 
+    IF(OR(ISBLANK(siret); NOT(ISNUMBER(siret)); siret < 10000000000000; siret > 99999999999999); FALSE; 
+      LET(
+        str; TO_TEXT(siret);
+        numLen; LEN(str);
+        processed; MAP(SEQUENCE(numLen); LAMBDA(idx;
+          LET(
+            d; VALUE(MID(str; numLen - idx + 1; 1));
+            IF(ISODD(idx); d; IF(d * 2 > 9; (d * 2) - 9; d * 2))
+          )
+        ));
+        MOD(SUM(processed); 10) = 0
+      )
+    )
+  ));
+  
+  outputRows; FILTER(
+    CHOOSECOLS(dbRows; outputIndexes);
+    ISNUMBER(FIND("1_Partenaire"; typeCol));
+    NOT(siretValid)
+  );
+
+  VSTACK(outputHeaders; outputRows)
+)
+"""
