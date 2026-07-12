@@ -61,7 +61,7 @@ function getAlerts()
 		"name": "ÉquipementFraisManquant",
 		"sheetName": "Alert-ÉquipementFraisManquant",
 		"type": "warning",
-		"description": "Partenaires qui souhaitent recevoir des produits frais mais n'ont pas de réfrigérateurs ou chambres froides positives dans leur liste d'équipement.",
+		"description": "Partenaires qui souhaitent recevoir des produits frais mais n'ont ni réfrigérateurs ni chambres froides positives dans leur liste d'équipement.",
 		"message": "Souhaite recevoir du frais sans stockage réfrigéré.",
 		"formula": "=LET(\n  dbHeaders; ACStructures!$1:$1;\n  dbRows;    ACStructures!$2:$1000;\n\n  outputHeaders; { \"Code VIF\" \\ \"Nom\" };\n  outputIndexes; BYCOL(outputHeaders; LAMBDA(colName; MATCH(colName; dbHeaders; 0)));\n\n  typeCol;  INDEX(dbRows; 0; MATCH(\"Type de structure\"; dbHeaders; 0));\n  equipCol; INDEX(dbRows; 0; MATCH(\"Equipements/Locaux\"; dbHeaders; 0));\n  prodCol;  INDEX(dbRows; 0; MATCH(\"Produits de la BA souhaités par le partenaire\"; dbHeaders; 0));\n\n  outputRows; FILTER(\n    CHOOSECOLS(dbRows; outputIndexes);\n    ISNUMBER(FIND(\"1_Partenaire\"; typeCol));\n    ISNUMBER(FIND(\"Frais\"; prodCol));\n    NOT(REGEXMATCH(\"Chambre froide positive|Réfrigérateur\"; equipCol))\n  );\n\n  VSTACK(outputHeaders; outputRows)\n)\n"
 	},
@@ -69,7 +69,7 @@ function getAlerts()
 		"name": "ÉquipementSurgeléManquant",
 		"sheetName": "Alert-ÉquipementSurgeléManquant",
 		"type": "warning",
-		"description": "Partenaires qui souhaitent recevoir des produits surgelés mais n'ont pas de congélateurs our chambres froides négatives dans leur liste d'équipement.",
+		"description": "Partenaires qui souhaitent recevoir des produits surgelés mais n'ont ni congélateurs ni chambres froides négatives dans leur liste d'équipement.",
 		"message": "Souhaite recevoir du surgelé sans stockage à température négative.",
 		"formula": "=LET(\n  dbHeaders; ACStructures!$1:$1;\n  dbRows;    ACStructures!$2:$1000;\n\n  outputHeaders; { \"Code VIF\" \\ \"Nom\" };\n  outputIndexes; BYCOL(outputHeaders; LAMBDA(colName; MATCH(colName; dbHeaders; 0)));\n\n  typeCol;  INDEX(dbRows; 0; MATCH(\"Type de structure\"; dbHeaders; 0));\n  equipCol; INDEX(dbRows; 0; MATCH(\"Equipements/Locaux\"; dbHeaders; 0));\n  prodCol;  INDEX(dbRows; 0; MATCH(\"Produits de la BA souhaités par le partenaire\"; dbHeaders; 0));\n\n  outputRows; FILTER(\n    CHOOSECOLS(dbRows; outputIndexes);\n    ISNUMBER(FIND(\"1_Partenaire\"; typeCol));\n    ISNUMBER(FIND(\"Surgelé\"; prodCol));\n    NOT(REGEXMATCH(\"Chambre froide négative|Congélateur\"; equipCol))\n  );\n\n  VSTACK(outputHeaders; outputRows)\n)\n"
 	}

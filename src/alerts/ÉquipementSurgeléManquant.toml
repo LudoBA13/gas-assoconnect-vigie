@@ -1,5 +1,5 @@
 type = "warning"
-description = "Partenaires qui souhaitent recevoir des produits surgelés mais n'ont pas de congélateurs our chambres froides négatives dans leur liste d'équipement."
+description = "Partenaires qui souhaitent recevoir des produits surgelés mais n'ont ni congélateurs ni chambres froides négatives dans leur liste d'équipement."
 message = "Souhaite recevoir du surgelé sans stockage à température négative."
 formula = """
 =LET(

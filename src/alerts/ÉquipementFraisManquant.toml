@@ -1,5 +1,5 @@
 type = "warning"
-description = "Partenaires qui souhaitent recevoir des produits frais mais n'ont pas de réfrigérateurs ou chambres froides positives dans leur liste d'équipement."
+description = "Partenaires qui souhaitent recevoir des produits frais mais n'ont ni réfrigérateurs ni chambres froides positives dans leur liste d'équipement."
 message = "Souhaite recevoir du frais sans stockage réfrigéré."
 formula = """
 =LET(
