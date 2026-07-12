@@ -8,6 +8,30 @@ function setUpSheets()
 
 // ... (existing code for createSheets, removeSheets, resizeSheet, generateMasterFormula, etc.)
 
+function setSheetSize(sheet, rows, columns)
+{
+	const currentRows = sheet.getMaxRows();
+	const currentCols = sheet.getMaxColumns();
+
+	if (rows > currentRows)
+	{
+		sheet.insertRowsAfter(currentRows, rows - currentRows);
+	}
+	else if (rows < currentRows)
+	{
+		sheet.deleteRows(rows + 1, currentRows - rows);
+	}
+
+	if (columns > currentCols)
+	{
+		sheet.insertColumnsAfter(currentCols, columns - currentCols);
+	}
+	else if (columns < currentCols)
+	{
+		sheet.deleteColumns(columns + 1, currentCols - columns);
+	}
+}
+
 function createIndexSheet()
 {
 	const ss = SpreadsheetApp.getActiveSpreadsheet();
@@ -21,9 +45,7 @@ function createIndexSheet()
 	sheet = ss.insertSheet('Index', 0);
 	sheet.setFrozenRows(1);
 	sheet.setColumnWidths(1, 4, [140, 70, 240, 480]);
-	sheet.setRowHeights(1, 200, 21); // Set default row height if needed, or omit
-	sheet.setMaxColumns(4);
-	sheet.setMaxRows(200);
+	setSheetSize(sheet, 200, 4);
 
 	const headerRange = sheet.getRange(1, 1, 1, 4);
 	headerRange.setBackground('#4a86e8')
@@ -43,8 +65,7 @@ function createAlertIndexSheet()
 		sheet = ss.insertSheet('Alerts');
 	}
 
-	sheet.setMaxColumns(4);
-	sheet.setMaxRows(40);
+	setSheetSize(sheet, 40, 4);
 
 	const alerts = getAlerts();
 	const data = [["Name", "Type", "Description", "Sheet Name"]];
