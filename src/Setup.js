@@ -1,11 +1,9 @@
 function setUpSheets()
 {
-	createSheets();
-	removeSheets();
+	createAlertSheets();
+	removeUnusedAlertSheets();
 	createIndexSheet();
 }
-
-// ... (existing code for createSheets, removeSheets, resizeSheet, generateMasterFormula, etc.)
 
 function createIndexSheet()
 {
@@ -32,7 +30,7 @@ function createIndexSheet()
 		.setVerticalAlignment('middle');
 }
 
-function createSheets()
+function createAlertSheets()
 {
 	const ss = SpreadsheetApp.getActiveSpreadsheet();
 
@@ -59,7 +57,7 @@ function createSheets()
 	});
 }
 
-function removeSheets()
+function removeUnusedAlertSheets()
 {
 	const ss = SpreadsheetApp.getActiveSpreadsheet();
 	const alerts = getAlerts();
