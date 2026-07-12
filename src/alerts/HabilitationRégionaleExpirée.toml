@@ -1,0 +1,29 @@
+type = "issue"
+description = "Liste des partenaires dont l'habilitation régionale est expirée."
+message = "Habilitation régionale invalide."
+formula = """
+=LET(
+  dbHeaders; ACStructures!$1:$1;
+  dbRows;    ACStructures!$2:$1000;
+
+  outputHeaders; { "Code VIF" \ "Nom" \ "Oui - Date de fin de l'habilitation" };
+  outputIndexes; BYCOL(outputHeaders; LAMBDA(colName; MATCH(colName; dbHeaders; 0)));
+
+  cutoffDate; TODAY();
+
+  typeCol;    INDEX(dbRows; 0; MATCH("Type de structure"; dbHeaders; 0));
+  dateCol;    INDEX(dbRows; 0; MATCH("Oui - Date de fin de l'habilitation"; dbHeaders; 0));
+  networkCol; INDEX(dbRows; 0; MATCH("Appartient-il à un grand réseau ayant une habilitation nationale ?"; dbHeaders; 0));
+  statusCol;  INDEX(dbRows; 0; MATCH("Statut"; dbHeaders; 0));
+
+  outputRows; FILTER(
+    CHOOSECOLS(dbRows; outputIndexes);
+    ISNUMBER(FIND("1_Partenaire"; typeCol));
+    dateCol <= cutoffDate;
+    networkCol = "1- NON";
+    statusCol <> "CCAS/CIAS"
+  );
+
+  VSTACK(outputHeaders; outputRows)
+)
+"""

@@ -18,11 +18,19 @@ function getAlerts()
 		"formula": "=LET(\n  dbHeaders; ACStructures!$1:$1;\n  dbRows;    ACStructures!$2:$1000;\n\n  outputHeaders; { \"Code VIF\" \\ \"Nom\" \\ \"Date de la dernière signature de la convention / du contrat\" };\n  outputIndexes; BYCOL(outputHeaders; LAMBDA(colName; MATCH(colName; dbHeaders; 0)));\n\n  cutoffDate; EDATE(TODAY(); -60);\n\n  typeCol; INDEX(dbRows; 0; MATCH(\"Type de structure\"; dbHeaders; 0));\n  dateCol; INDEX(dbRows; 0; MATCH(\"Date de la dernière signature de la convention / du contrat\"; dbHeaders; 0));\n\n  outputRows; FILTER(\n    CHOOSECOLS(dbRows; outputIndexes);\n    ISNUMBER(FIND(\"1_Partenaire\"; typeCol));\n    dateCol <= cutoffDate\n  );\n\n  VSTACK(outputHeaders; outputRows)\n)\n"
 	},
 	{
-		"name": "HabilitationRégionaleInvalide",
-		"sheetName": "Alert-HabilitationRégionaleInvalide",
+		"name": "HabilitationInvalide",
+		"sheetName": "Alert-HabilitationInvalide",
 		"type": "issue",
-		"description": "Liste des partenaires qui ne possèdent pas d'habilitation régionale valide. Sont exclus : CCAS/CIAS, membres d'un réseau ayant une habilitation nationale.",
-		"message": "Pas d'habilitation régionale valide.",
+		"description": "Liste des partenaires qui ne possèdent pas d'habilitation valide. Sont exclus : CCAS/CIAS, membres d'un réseau ayant une habilitation nationale, partenaires ayant une habilitation régionale valide.",
+		"message": "Absence d'habilitation valide.",
+		"formula": "=LET(\n  dbHeaders; ACStructures!$1:$1;\n  dbRows;    ACStructures!$2:$1000;\n\n  outputHeaders; { \"Code VIF\" \\ \"Nom\" };\n  outputIndexes; BYCOL(outputHeaders; LAMBDA(colName; MATCH(colName; dbHeaders; 0)));\n\n  cutoffDate; TODAY();\n\n  typeCol;    INDEX(dbRows; 0; MATCH(\"Type de structure\"; dbHeaders; 0));\n  dateCol;    INDEX(dbRows; 0; MATCH(\"Oui - Date de fin de l'habilitation\"; dbHeaders; 0));\n  networkCol; INDEX(dbRows; 0; MATCH(\"Appartient-il à un grand réseau ayant une habilitation nationale ?\"; dbHeaders; 0));\n  regionCol;  INDEX(dbRows; 0; MATCH(\"Si non, a-t-il une habilitation régionale ?\"; dbHeaders; 0));\n  statusCol;  INDEX(dbRows; 0; MATCH(\"Statut\"; dbHeaders; 0));\n\n  isCCAS;      ARRAYFORMULA(statusCol = \"CCAS/CIAS\");\n  hasRegion;   ARRAYFORMULA((regionCol = \"Oui\") * (dateCol > cutoffDate));\n  isInNetwork; ARRAYFORMULA((networkCol <> \"\") * (networkCol <> \"1- NON\"));\n\n  outputRows; FILTER(\n    CHOOSECOLS(dbRows; outputIndexes);\n    ISNUMBER(FIND(\"1_Partenaire\"; typeCol));\n    NOT(isCCAS + hasRegion + isInNetwork)\n  );\n\n  VSTACK(outputHeaders; outputRows)\n)\n"
+	},
+	{
+		"name": "HabilitationRégionaleExpirée",
+		"sheetName": "Alert-HabilitationRégionaleExpirée",
+		"type": "issue",
+		"description": "Liste des partenaires dont l'habilitation régionale est expirée.",
+		"message": "Habilitation régionale invalide.",
 		"formula": "=LET(\n  dbHeaders; ACStructures!$1:$1;\n  dbRows;    ACStructures!$2:$1000;\n\n  outputHeaders; { \"Code VIF\" \\ \"Nom\" \\ \"Oui - Date de fin de l'habilitation\" };\n  outputIndexes; BYCOL(outputHeaders; LAMBDA(colName; MATCH(colName; dbHeaders; 0)));\n\n  cutoffDate; TODAY();\n\n  typeCol;    INDEX(dbRows; 0; MATCH(\"Type de structure\"; dbHeaders; 0));\n  dateCol;    INDEX(dbRows; 0; MATCH(\"Oui - Date de fin de l'habilitation\"; dbHeaders; 0));\n  networkCol; INDEX(dbRows; 0; MATCH(\"Appartient-il à un grand réseau ayant une habilitation nationale ?\"; dbHeaders; 0));\n  statusCol;  INDEX(dbRows; 0; MATCH(\"Statut\"; dbHeaders; 0));\n\n  outputRows; FILTER(\n    CHOOSECOLS(dbRows; outputIndexes);\n    ISNUMBER(FIND(\"1_Partenaire\"; typeCol));\n    dateCol <= cutoffDate;\n    networkCol = \"1- NON\";\n    statusCol <> \"CCAS/CIAS\"\n  );\n\n  VSTACK(outputHeaders; outputRows)\n)\n"
 	},
 	{

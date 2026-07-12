@@ -1,12 +1,12 @@
 type = "issue"
-description = "Liste des partenaires qui ne possèdent pas d'habilitation régionale valide. Sont exclus : CCAS/CIAS, membres d'un réseau ayant une habilitation nationale."
-message = "Pas d'habilitation régionale valide."
+description = "Liste des partenaires qui ne possèdent pas d'habilitation valide. Sont exclus : CCAS/CIAS, membres d'un réseau ayant une habilitation nationale, partenaires ayant une habilitation régionale valide."
+message = "Absence d'habilitation valide."
 formula = """
 =LET(
   dbHeaders; ACStructures!$1:$1;
   dbRows;    ACStructures!$2:$1000;
 
-  outputHeaders; { "Code VIF" \ "Nom" \ "Oui - Date de fin de l'habilitation" };
+  outputHeaders; { "Code VIF" \ "Nom" };
   outputIndexes; BYCOL(outputHeaders; LAMBDA(colName; MATCH(colName; dbHeaders; 0)));
 
   cutoffDate; TODAY();
@@ -14,14 +14,17 @@ formula = """
   typeCol;    INDEX(dbRows; 0; MATCH("Type de structure"; dbHeaders; 0));
   dateCol;    INDEX(dbRows; 0; MATCH("Oui - Date de fin de l'habilitation"; dbHeaders; 0));
   networkCol; INDEX(dbRows; 0; MATCH("Appartient-il à un grand réseau ayant une habilitation nationale ?"; dbHeaders; 0));
+  regionCol;  INDEX(dbRows; 0; MATCH("Si non, a-t-il une habilitation régionale ?"; dbHeaders; 0));
   statusCol;  INDEX(dbRows; 0; MATCH("Statut"; dbHeaders; 0));
+
+  isCCAS;      ARRAYFORMULA(statusCol = "CCAS/CIAS");
+  hasRegion;   ARRAYFORMULA((regionCol = "Oui") * (dateCol > cutoffDate));
+  isInNetwork; ARRAYFORMULA((networkCol <> "") * (networkCol <> "1- NON"));
 
   outputRows; FILTER(
     CHOOSECOLS(dbRows; outputIndexes);
     ISNUMBER(FIND("1_Partenaire"; typeCol));
-    dateCol <= cutoffDate;
-    networkCol = "1- NON";
-    statusCol <> "CCAS/CIAS"
+    NOT(isCCAS + hasRegion + isInNetwork)
   );
 
   VSTACK(outputHeaders; outputRows)
