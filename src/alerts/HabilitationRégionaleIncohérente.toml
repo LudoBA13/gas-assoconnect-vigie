@@ -1,0 +1,26 @@
+type = "warning"
+description = "Liste des partenaires dont l'habilitation régionale est incorrectement configurée. Le statut de l'habilitation régionale 'Oui'/'Non' doit être cohérent avec la présence d'une date de fin d'habilitation."
+message = "Habilitation régionale incohérente. Statut : '$3'. Date : '$4'."
+formula = """
+=LET(
+  dbHeaders; ACStructures!$1:$1;
+  dbRows;    ACStructures!$2:$1000;
+
+  outputHeaders; { "Code VIF" \ "Nom" \ "Si non, a-t-il une habilitation régionale ?" \ "Oui - Date de fin de l'habilitation" };
+  outputIndexes; BYCOL(outputHeaders; LAMBDA(colName; MATCH(colName; dbHeaders; 0)));
+
+  cutoffDate; TODAY();
+
+  typeCol;   INDEX(dbRows; 0; MATCH("Type de structure"; dbHeaders; 0));
+  regionCol; INDEX(dbRows; 0; MATCH("Si non, a-t-il une habilitation régionale ?"; dbHeaders; 0));
+  dateCol;   INDEX(dbRows; 0; MATCH("Oui - Date de fin de l'habilitation"; dbHeaders; 0));
+
+  outputRows; FILTER(
+    CHOOSECOLS(dbRows; outputIndexes);
+    ISNUMBER(FIND("1_Partenaire"; typeCol));
+    (regionCol = "Oui") = ISBLANK(dateCol)
+  );
+
+  VSTACK(outputHeaders; outputRows)
+)
+"""
