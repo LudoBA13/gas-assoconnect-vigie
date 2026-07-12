@@ -1,0 +1,25 @@
+type = "warning"
+description = "Partenaires qui souhaitent recevoir des produits surgelés mais n'ont pas de congélateurs our chambres froides négatives dans leur liste d'équipement."
+message = "Souhaite recevoir du surgelé sans stockage à température négative."
+formula = """
+=LET(
+  dbHeaders; ACStructures!$1:$1;
+  dbRows;    ACStructures!$2:$1000;
+
+  outputHeaders; { "Code VIF" \ "Nom" };
+  outputIndexes; BYCOL(outputHeaders; LAMBDA(colName; MATCH(colName; dbHeaders; 0)));
+
+  typeCol;  INDEX(dbRows; 0; MATCH("Type de structure"; dbHeaders; 0));
+  equipCol; INDEX(dbRows; 0; MATCH("Equipements/Locaux"; dbHeaders; 0));
+  prodCol;  INDEX(dbRows; 0; MATCH("Produits de la BA souhaités par le partenaire"; dbHeaders; 0));
+
+  outputRows; FILTER(
+    CHOOSECOLS(dbRows; outputIndexes);
+    ISNUMBER(FIND("1_Partenaire"; typeCol));
+    ISNUMBER(FIND("Surgelé"; prodCol));
+    NOT(REGEXMATCH("Chambre froide négative|Congélateur"; equipCol))
+  );
+
+  VSTACK(outputHeaders; outputRows)
+)
+"""
