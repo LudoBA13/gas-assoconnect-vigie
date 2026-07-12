@@ -78,5 +78,12 @@ function generateMasterFormula()
 
 function _debugFormula()
 {
-	console.log(generateMasterFormula());
+	const formula = generateMasterFormula();
+	const ss = SpreadsheetApp.getActiveSpreadsheet();
+	let sheet = ss.getSheetByName('Index');
+	if (!sheet)
+	{
+		sheet = ss.insertSheet('Index');
+	}
+	sheet.getRange('A1').setFormula(formula);
 }
