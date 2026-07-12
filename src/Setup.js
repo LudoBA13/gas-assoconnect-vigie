@@ -79,8 +79,13 @@ function generateMasterFormula()
 		)`;
 	});
 
+	// Start with headers
+	let formula = '=VSTACK({"Alerte" \\ "Code VIF" \\ "Nom" \\ "Message" }; ';
+
 	// Stack and remove errors
-	return `=QUERY(VSTACK(${parts.join('; ')}); "where Col2 is not null order by Col2 asc, Col1 asc")`;
+	formula += `QUERY(VSTACK(${parts.join('; ')}); "where Col2 is not null order by Col2 asc, Col1 asc")`;
+
+	return formula + ')';
 }
 
 if (typeof module !== 'undefined') {
