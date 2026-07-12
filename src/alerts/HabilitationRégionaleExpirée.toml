@@ -19,6 +19,7 @@ formula = """
   outputRows; FILTER(
     CHOOSECOLS(dbRows; outputIndexes);
     ISNUMBER(FIND("1_Partenaire"; typeCol));
+	dateCol > 0;
     dateCol <= cutoffDate;
     networkCol = "1- NON";
     statusCol <> "CCAS/CIAS"
