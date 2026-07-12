@@ -1,6 +1,7 @@
 function setUpSheets()
 {
 	createSheets();
+	removeSheets();
 }
 
 function createSheets()
@@ -27,6 +28,23 @@ function createSheets()
 		}
 
 		resizeSheet(sheet);
+	});
+}
+
+function removeSheets()
+{
+	const ss = SpreadsheetApp.getActiveSpreadsheet();
+	const alerts = getAlerts();
+	const validSheetNames = alerts.map(alert => alert.sheetName);
+	const sheets = ss.getSheets();
+
+	sheets.forEach(sheet =>
+	{
+		const name = sheet.getName();
+		if (name.startsWith('Alert-') && !validSheetNames.includes(name))
+		{
+			ss.deleteSheet(sheet);
+		}
 	});
 }
 
