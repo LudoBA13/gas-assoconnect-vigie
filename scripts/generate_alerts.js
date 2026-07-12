@@ -49,7 +49,7 @@ const outputContent = `function getAlerts()
 
 function getMasterFormula()
 {
-	return '${masterFormula.replace(/'/g, "\\'")}';
+	return ${JSON.stringify(masterFormula)};
 }
 `;
 
