@@ -61,7 +61,8 @@ function generateMasterFormula()
 	const alerts = getAlerts();
 	const parts = alerts.map(alert =>
 	{
-		const messageParts = alert.message.split(/(\$\d+)/g).map(part => {
+		const messageParts = alert.message.split(/(\$\d+)/g).map(part =>
+		{
 			if (part.startsWith('$')) {
 				const colIndex = parseInt(part.substring(1));
 				return `INDEX(data; r; ${colIndex})`;
