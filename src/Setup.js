@@ -2,6 +2,34 @@ function setUpSheets()
 {
 	createSheets();
 	removeSheets();
+	createIndexSheet();
+}
+
+// ... (existing code for createSheets, removeSheets, resizeSheet, generateMasterFormula, etc.)
+
+function createIndexSheet()
+{
+	const ss = SpreadsheetApp.getActiveSpreadsheet();
+	let sheet = ss.getSheetByName('Index');
+
+	if (sheet)
+	{
+		return;
+	}
+
+	sheet = ss.insertSheet('Index', 0);
+	sheet.setFrozenRows(1);
+	sheet.setColumnWidths(1, 4, [140, 70, 240, 480]);
+	sheet.setRowHeights(1, 200, 21); // Set default row height if needed, or omit
+	sheet.setMaxColumns(4);
+	sheet.setMaxRows(200);
+
+	const headerRange = sheet.getRange(1, 1, 1, 4);
+	headerRange.setBackground('#4a86e8')
+		.setFontColor('white')
+		.setFontWeight('bold')
+		.setHorizontalAlignment('center')
+		.setVerticalAlignment('middle');
 }
 
 function createSheets()
