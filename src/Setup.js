@@ -73,7 +73,7 @@ function generateMasterFormula()
 	});
 
 	// Stack and remove errors
-	return `=QUERY(VSTACK(${parts.join('; ')}); "where Col2 is not null")`;
+	return `=QUERY(VSTACK(${parts.join('; ')}); "where Col2 is not null order by Col2 asc, Col1 asc")`;
 }
 
 function _debugFormula()
