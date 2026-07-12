@@ -75,10 +75,14 @@ function generateMasterFormula()
 			validRows; FILTER(data; NOT(ISBLANK(INDEX(data; 0; 1))) * NOT(ISERROR(INDEX(data; 0; 1))));
 			HSTACK(MAKEARRAY(ROWS(validRows); 1; LAMBDA(r; c; "${alert.name}")); CHOOSECOLS(validRows; 1; 2); MAKEARRAY(ROWS(validRows); 1; LAMBDA(r; c; ${formulaMessage})))
 		)`;
-		});
+	});
 
 	// Stack and remove errors
 	return `=QUERY(VSTACK(${parts.join('; ')}); "where Col2 is not null order by Col2 asc, Col1 asc")`;
+}
+
+if (typeof module !== 'undefined') {
+	module.exports = { generateMasterFormula };
 }
 
 function _debugFormula()

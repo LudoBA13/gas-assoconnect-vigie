@@ -1,6 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const toml = require('@iarna/toml');
+const { generateMasterFormula } = require('../src/Setup');
 
 const alertsDir = path.join(__dirname, '..', 'src', 'alerts');
 const outputFile = path.join(__dirname, '..', 'src', 'Alerts.js');
@@ -16,31 +17,15 @@ const alerts = files.map(file =>
 	return { name: path.basename(file, '.toml'), sheetName, ...parsed };
 });
 
-function generateMasterFormula(alerts)
-{
-	const parts = alerts.map(alert =>
-	{
-		const messageParts = alert.message.split(/(\$\d+)/g).map(part => {
-			if (part.startsWith('$')) {
-				const colIndex = parseInt(part.substring(1));
-				return `INDEX(data; r; ${colIndex})`;
-			}
-			return `"${part.replace(/"/g, '""')}"`;
-		});
-		const formulaMessage = messageParts.join(' & ');
-
-		return `LET(
-			data; '${alert.sheetName}'!$A$2:$Z;
-			validRows; FILTER(data; NOT(ISBLANK(INDEX(data; 0; 1))) * NOT(ISERROR(INDEX(data; 0; 1))));
-			HSTACK(MAKEARRAY(ROWS(validRows); 1; LAMBDA(r; c; "${alert.name}")); CHOOSECOLS(validRows; 1; 2); MAKEARRAY(ROWS(validRows); 1; LAMBDA(r; c; ${formulaMessage})))
-		)`;
-	});
-
-	// Stack and remove errors
-	return `=QUERY(VSTACK(${parts.join('; ')}); "where Col2 is not null order by Col2 asc, Col1 asc")`;
+// Mock getAlerts for the Setup.js dependency
+function getAlerts() {
+    return alerts;
 }
 
-const masterFormula = generateMasterFormula(alerts);
+// Attach mock to global scope if needed, or re-factor Setup.js to accept alerts
+global.getAlerts = getAlerts;
+
+const masterFormula = generateMasterFormula();
 
 const outputContent = `function getAlerts()
 {
