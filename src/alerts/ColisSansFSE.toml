@@ -1,0 +1,26 @@
+type = "info"
+description = "Partenaires éligibles au FSE+ dont le mode de distribution est colis ou repas mais qui ne reçoivent pas de produits FSE+."
+message = "Distribution de type '$3' mais ne reçoit pas de FSE+."
+formula = """
+=LET(
+  dbHeaders; ACStructures!$1:$1;
+  dbRows;    ACStructures!$2:$1000;
+
+  outputHeaders; { "Code VIF" \ "Nom" \ "Modes de distribution de l'aide alimentaire" };
+  outputIndexes; BYCOL(outputHeaders; LAMBDA(colName; MATCH(colName; dbHeaders; 0)));
+
+  typeCol;  INDEX(dbRows; 0; MATCH("Type de structure"; dbHeaders; 0));
+  fseCol;   INDEX(dbRows; 0; MATCH("Le partenaire reçoit-il des produits du FSE + ?"; dbHeaders; 0));
+  modesCol; INDEX(dbRows; 0; MATCH("Modes de distribution de l'aide alimentaire"; dbHeaders; 0));
+
+  outputRows; FILTER(
+    CHOOSECOLS(dbRows; outputIndexes);
+    ISNUMBER(FIND("1_Partenaire"; typeCol));
+    REGEXMATCH(modesCol; "Colis|Repas");
+    ISERR(FIND("Epicerie Sociale"; modesCol));
+    fseCol <> "Oui"
+  );
+
+  VSTACK(outputHeaders; outputRows)
+)
+"""
