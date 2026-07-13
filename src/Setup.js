@@ -2,8 +2,32 @@ function setUpSheets()
 {
 	createAlertSheets();
 	removeUnusedAlertSheets();
-	createIndexSheet();
+	setUpIndexSheet();
 	createAlertIndexSheet();
+}
+
+function setUpIndexSheet()
+{
+	createIndexSheet();
+	updateIndexSheet();
+}
+
+function updateIndexSheet()
+{
+	const ss = SpreadsheetApp.getActiveSpreadsheet();
+	const sheet = ss.getSheetByName('Index');
+	if (!sheet)
+	{
+		return;
+	}
+
+	const formula = generateMasterFormula();
+	const a1Cell = sheet.getRange('A1');
+	
+	if (a1Cell.getFormula() !== formula)
+	{
+		a1Cell.setFormula(formula);
+	}
 }
 
 // ... (existing code for createSheets, removeSheets, resizeSheet, generateMasterFormula, etc.)
@@ -189,16 +213,4 @@ function generateMasterFormula()
 
 if (typeof module !== 'undefined') {
 	module.exports = { generateMasterFormula };
-}
-
-function _debugFormula()
-{
-	const formula = generateMasterFormula();
-	const ss = SpreadsheetApp.getActiveSpreadsheet();
-	let sheet = ss.getSheetByName('Index');
-	if (!sheet)
-	{
-		sheet = ss.insertSheet('Index');
-	}
-	sheet.getRange('A1').setFormula(formula);
 }
