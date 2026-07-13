@@ -9,7 +9,8 @@ formula = """
   outputHeaders; { "Code VIF" \ "Nom" \ "Oui - Date de fin de l'habilitation" };
   outputIndexes; BYCOL(outputHeaders; LAMBDA(colName; MATCH(colName; dbHeaders; 0)));
 
-  cutoffDate; EDATE(TODAY(); 6);
+  minDate; TODAY();
+  maxDate; EDATE(TODAY(); 6);
 
   typeCol;    INDEX(dbRows; 0; MATCH("Type de structure"; dbHeaders; 0));
   dateCol;    INDEX(dbRows; 0; MATCH("Oui - Date de fin de l'habilitation"; dbHeaders; 0));
@@ -19,8 +20,8 @@ formula = """
   outputRows; FILTER(
     CHOOSECOLS(dbRows; outputIndexes);
     ISNUMBER(FIND("1_Partenaire"; typeCol));
-	dateCol > 0;
-    dateCol <= cutoffDate;
+    dateCol >= minDate;
+    dateCol <= maxDate;
     networkCol = "1- NON";
     statusCol <> "CCAS/CIAS"
   );
