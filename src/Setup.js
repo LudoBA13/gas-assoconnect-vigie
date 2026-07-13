@@ -1,9 +1,13 @@
 function setUpSheets()
 {
+	setUpAlertSheets();
+	setUpIndexSheet();
+}
+
+function setUpAlertSheets()
+{
 	createAlertSheets();
 	removeUnusedAlertSheets();
-	setUpIndexSheet();
-	createAlertIndexSheet();
 }
 
 function setUpIndexSheet()
