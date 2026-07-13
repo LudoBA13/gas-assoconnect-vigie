@@ -1,0 +1,27 @@
+type = "info"
+description = "Partenaires dont la convention aura 5 ans dans les 6 prochains mois."
+message = "La convention doit être renouvelée bientôt."
+formula = """
+=LET(
+  dbHeaders; ACStructures!$1:$1;
+  dbRows;    ACStructures!$2:$1000;
+
+  outputHeaders; { "Code VIF" \ "Nom" \ "Date de la dernière signature de la convention / du contrat" };
+  outputIndexes; BYCOL(outputHeaders; LAMBDA(colName; MATCH(colName; dbHeaders; 0)));
+
+  minDate; EDATE(TODAY(); -60);
+  maxDate; EDATE(TODAY(); -54);
+
+  typeCol; INDEX(dbRows; 0; MATCH("Type de structure"; dbHeaders; 0));
+  dateCol; INDEX(dbRows; 0; MATCH("Date de la dernière signature de la convention / du contrat"; dbHeaders; 0));
+
+  outputRows; FILTER(
+    CHOOSECOLS(dbRows; outputIndexes);
+    ISNUMBER(FIND("1_Partenaire"; typeCol));
+    dateCol >= minDate;
+    dateCol <= maxDate
+  );
+
+  VSTACK(outputHeaders; outputRows)
+)
+"""
