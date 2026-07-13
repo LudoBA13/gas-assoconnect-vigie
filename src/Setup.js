@@ -8,6 +8,7 @@ function setUpAlertSheets()
 {
 	createAlertSheets();
 	removeUnusedAlertSheets();
+	createAlertIndexSheet();
 }
 
 function setUpIndexSheet()
