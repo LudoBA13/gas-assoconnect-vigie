@@ -196,24 +196,32 @@ function generateMasterFormula()
 				const colIndex = parseInt(part.substring(1));
 				return `INDEX(data; r; ${colIndex})`;
 			}
+			// TODO: use replaceAll
 			return `"${part.replace(/"/g, '""')}"`;
 		});
 		const formulaMessage = messageParts.join(' & ');
 
-		return `LET(
-			data; '${alert.sheetName}'!$A$2:$Z;
-			validRows; FILTER(data; NOT(ISBLANK(INDEX(data; 0; 1))) * NOT(ISERROR(INDEX(data; 0; 1))));
-			HSTACK(MAKEARRAY(ROWS(validRows); 1; LAMBDA(r; c; "${alert.name}")); CHOOSECOLS(validRows; 1; 2); MAKEARRAY(ROWS(validRows); 1; LAMBDA(r; c; ${formulaMessage})))
-		)`;
+		return `IF(
+			ISNA('${alert.sheetName}'!$A$2);
+			TOCOL(; 1);
+			LET(
+				data; FILTER('${alert.sheetName}'!$A$2:$Z; '${alert.sheetName}'!$A$2:$A <> "");
+				HSTACK(
+					MAKEARRAY(ROWS(data); 1; LAMBDA(r; c; "${alert.name}"));
+					CHOOSECOLS(data; 1; 2);
+					MAKEARRAY(ROWS(data); 1; LAMBDA(r; c; ${formulaMessage}))
+				)
+			)
+		)`.replaceAll('\n\t\t', '\n').replaceAll('\t', '  ');
 	});
 
 	// Start with headers
 	let formula = '=VSTACK({"Alerte" \\ "Code VIF" \\ "Nom" \\ "Message" }; ';
 
-	// Stack and remove errors
-	formula += `QUERY(VSTACK(${parts.join('; ')}); "where Col3 is not null order by Col3 asc, Col1 asc")`;
+	// Sort then stack the rows
+	formula += `SORT(VSTACK(${parts.join(';\n')}); 3; TRUE; 1; TRUE))`;
 
-	return formula + ')';
+	return formula;
 }
 
 if (typeof module !== 'undefined') {
