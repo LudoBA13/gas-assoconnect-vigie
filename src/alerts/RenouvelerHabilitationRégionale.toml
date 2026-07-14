@@ -1,6 +1,6 @@
 type = "info"
 description = "Partenaires dont l'habilitation régionale expire dans les 6 prochains mois."
-message = "Habilitation régionale expire bientôt. ($3)"
+message = "L'habilitation régionale expire bientôt. ({3, date, dd/mm/yyyy})"
 formula = """
 =LET(
   dbHeaders; ACStructures!$1:$1;

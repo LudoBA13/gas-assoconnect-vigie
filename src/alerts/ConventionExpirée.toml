@@ -1,6 +1,6 @@
 type = "issue"
 description = "Partenaires dont la convention est antérieure à 5 ans."
-message = "La date de dernière signature de convention est antérieure à 5 ans."
+message = "La dernière signature de convention est antérieure à 5 ans. ({3, date, dd/mm/yyyy})"
 formula = """
 =LET(
   dbHeaders; ACStructures!$1:$1;

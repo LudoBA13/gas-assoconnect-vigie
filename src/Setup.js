@@ -184,28 +184,48 @@ function resizeSheet(sheet)
 	}
 }
 
-function generateAlertColumnsFormula(alert)
+function generateMessageFormula(message, varName)
 {
-	// Static messages can be built simply
-	if (!alert.message.includes('$'))
-	{
-		return `IF(SEQUENCE(ROWS(data)); { "${alert.name}" \\ "${alert.message.replaceAll('"', '""')}" })`;
-	}
-
 	// Dynamic message need to be built at runtime
-	const messageParts = alert.message.split(/(\$\d+)/g).map(part =>
+	const messageParts = message.split(/(\{(?=\d)[^\}]+\})/g).map(part =>
 	{
-		if (part.startsWith('$'))
+		if (!part.startsWith('{'))
 		{
-			const colIdx = parseInt(part.substring(1));
-			return `INDEX(data; r; ${colIdx})`;
+			return '"' + part.replaceAll('"', '""') + '"';
 		}
 
-		return '"' + part.replaceAll('"', '""') + '"';
+		const colIdx = parseInt(part.substring(1));
+		let formula = `INDEX(${varName}; r; ${colIdx})`;
+
+		// Convert placeholders in the ICU format {1, date, yyyy-MM-dd}
+		// That's the only feature supported, others may be supported as required
+		const m = /\d+, date, ([^\}"]+)/.exec(part);
+		if (m)
+		{
+			formula = `TEXT(${formula}; "${m[1]}")`;
+		}
+
+		return formula;
 	});
+
 	const messageFormula = messageParts.join(' & ');
 
-	return `MAKEARRAY(ROWS(data); 1; LAMBDA(r; c; { "${alert.name}" \\ ${messageFormula} }))`;
+	return messageFormula;
+}
+
+function generateAlertColumnsFormula(alert)
+{
+	const varName = 'data';
+
+	// Static messages can be built simply
+	if (!alert.message.includes('{'))
+	{
+		return `IF(SEQUENCE(ROWS(${varName})); { "${alert.name}" \\ "${alert.message.replaceAll('"', '""')}" })`;
+	}
+
+	const messageFormula = generateMessageFormula(alert.message, varName);
+
+	return `MAKEARRAY(ROWS(${varName}); 1; LAMBDA(r; c; { "${alert.name}" \\ ${messageFormula} }))`;
 }
 
 function generateMasterFormula()

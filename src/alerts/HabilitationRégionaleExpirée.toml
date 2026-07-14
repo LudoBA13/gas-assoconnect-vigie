@@ -1,6 +1,6 @@
 type = "issue"
 description = "Partenaires dont l'habilitation régionale est expirée."
-message = "Habilitation régionale expirée."
+message = "Habilitation régionale expirée. ({3, date, dd/mm/yyyy})"
 formula = """
 =LET(
   dbHeaders; ACStructures!$1:$1;
