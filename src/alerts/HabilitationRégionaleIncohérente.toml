@@ -6,7 +6,7 @@ formula = """
   dbHeaders; ACStructures!$1:$1;
   dbRows;    ACStructures!$2:$1000;
 
-  outputHeaders; { "Code VIF" \ "Nom" \ "Si non, a-t-il une habilitation régionale ?" \ "Oui - Date de fin de l'habilitation" };
+  outputHeaders; { "ID du Contact" \ "Nom" \ "Si non, a-t-il une habilitation régionale ?" \ "Oui - Date de fin de l'habilitation" };
   outputIndexes; BYCOL(outputHeaders; LAMBDA(colName; MATCH(colName; dbHeaders; 0)));
 
   cutoffDate; TODAY();

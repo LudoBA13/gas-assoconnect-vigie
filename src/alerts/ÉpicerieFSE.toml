@@ -6,7 +6,7 @@ formula = """
   dbHeaders; ACStructures!$1:$1;
   dbRows;    ACStructures!$2:$1000;
 
-  outputHeaders; { "Code VIF" \ "Nom" };
+  outputHeaders; { "ID du Contact" \ "Nom" };
   outputIndexes; BYCOL(outputHeaders; LAMBDA(colName; MATCH(colName; dbHeaders; 0)));
 
   typeCol;  INDEX(dbRows; 0; MATCH("Type de structure"; dbHeaders; 0));

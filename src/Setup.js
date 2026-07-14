@@ -206,17 +206,20 @@ function generateMasterFormula()
 			TOCOL(; 1);
 			LET(
 				data; FILTER('${alert.sheetName}'!$A$2:$Z; '${alert.sheetName}'!$A$2:$A <> "");
-				HSTACK(
-					MAKEARRAY(ROWS(data); 1; LAMBDA(r; c; "${alert.name}"));
-					CHOOSECOLS(data; 1; 2);
-					MAKEARRAY(ROWS(data); 1; LAMBDA(r; c; ${formulaMessage}))
+				CHOOSECOLS(
+					HSTACK(
+						MAKEARRAY(ROWS(data); 1; LAMBDA(r; c; "${alert.name}"));
+						MAKEARRAY(ROWS(data); 1; LAMBDA(r; c; ${formulaMessage}));
+						data
+					);
+					1; 3; 4; 2
 				)
 			)
 		)`.replaceAll('\n\t\t', '\n').replaceAll('\t', '  ');
 	});
 
 	// Start with headers
-	let formula = '=VSTACK({"Alerte" \\ "Code VIF" \\ "Nom" \\ "Message" }; ';
+	let formula = '=VSTACK({"Alerte" \\ "ID du Contact" \\ "Nom" \\ "Message" }; ';
 
 	// Sort then stack the rows
 	formula += `SORT(VSTACK(${parts.join(';\n')}); 3; TRUE; 1; TRUE))`;
