@@ -184,22 +184,36 @@ function resizeSheet(sheet)
 	}
 }
 
+function generateAlertColumnsFormula(alert)
+{
+	// Static messages can be built simply
+	if (!alert.message.includes('$'))
+	{
+		return `IF(SEQUENCE(ROWS(data)); { "${alert.name}" \\ "${alert.message.replaceAll('"', '""')}" })`;
+	}
+
+	// Dynamic message need to be built at runtime
+	const messageParts = alert.message.split(/(\$\d+)/g).map(part =>
+	{
+		if (part.startsWith('$'))
+		{
+			const colIdx = parseInt(part.substring(1));
+			return `INDEX(data; r; ${colIdx})`;
+		}
+
+		return '"' + part.replaceAll('"', '""') + '"';
+	});
+	const messageFormula = messageParts.join(' & ');
+
+	return `MAKEARRAY(ROWS(data); 1; LAMBDA(r; c; { "${alert.name}" \\ ${messageFormula} }))`;
+}
+
 function generateMasterFormula()
 {
 	const alerts = getAlerts();
 	const parts = alerts.map(alert =>
 	{
-		const messageParts = alert.message.split(/(\$\d+)/g).map(part =>
-		{
-			if (part.startsWith('$'))
-			{
-				const colIndex = parseInt(part.substring(1));
-				return `INDEX(data; r; ${colIndex})`;
-			}
-			// TODO: use replaceAll
-			return `"${part.replace(/"/g, '""')}"`;
-		});
-		const formulaMessage = messageParts.join(' & ');
+		const alertColumnsFormula = generateAlertColumnsFormula(alert);
 
 		return `IF(
 			ISNA('${alert.sheetName}'!$A$2);
@@ -208,8 +222,7 @@ function generateMasterFormula()
 				data; FILTER('${alert.sheetName}'!$A$2:$Z; '${alert.sheetName}'!$A$2:$A <> "");
 				CHOOSECOLS(
 					HSTACK(
-						MAKEARRAY(ROWS(data); 1; LAMBDA(r; c; "${alert.name}"));
-						MAKEARRAY(ROWS(data); 1; LAMBDA(r; c; ${formulaMessage}));
+						${alertColumnsFormula};
 						data
 					);
 					1; 3; 4; 2
