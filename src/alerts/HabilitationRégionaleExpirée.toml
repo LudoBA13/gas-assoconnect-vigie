@@ -1,7 +1,7 @@
 type = "issue"
 description = "Partenaires dont l'habilitation régionale est expirée."
 message = "Habilitation régionale expirée. ({3, date, dd/mm/yyyy})"
-formula = """
+formula = '''
 =LET(
   dbHeaders; ACStructures!$1:$1;
   dbRows;    ACStructures!$2:$1000;
@@ -27,4 +27,4 @@ formula = """
 
   VSTACK(outputHeaders; outputRows)
 )
-"""
+'''

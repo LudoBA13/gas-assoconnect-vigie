@@ -1,7 +1,7 @@
 type = "info"
 description = "Partenaires dont l'habilitation régionale expire dans les 6 prochains mois."
 message = "L'habilitation régionale expire bientôt. ({3, date, dd/mm/yyyy})"
-formula = """
+formula = '''
 =LET(
   dbHeaders; ACStructures!$1:$1;
   dbRows;    ACStructures!$2:$1000;
@@ -28,4 +28,4 @@ formula = """
 
   VSTACK(outputHeaders; outputRows)
 )
-"""
+'''

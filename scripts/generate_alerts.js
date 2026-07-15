@@ -11,7 +11,7 @@ const files = fs.readdirSync(alertsDir).filter(file => file.endsWith('.toml'));
 const alerts = files.map(file =>
 {
 	const filePath = path.join(alertsDir, file);
-	const content = fs.readFileSync(filePath, 'utf-8').replace(/ \\ /g, ' \\\\ ');
+	const content = fs.readFileSync(filePath, 'utf-8');
 	const parsed = toml.parse(content);
 	const sheetName = 'Alert-' + path.basename(file, '.toml');
 	return { name: path.basename(file, '.toml'), sheetName, ...parsed };

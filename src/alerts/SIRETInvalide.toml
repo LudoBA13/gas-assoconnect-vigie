@@ -1,7 +1,7 @@
 type = "issue"
 description = "Partenaires dont le numéro SIRET est manquant ou invalide. (14 chiffres dont clé Luhn)"
 message = "SIRET manquant ou invalide."
-formula = """
+formula = '''
 =LET(
   dbHeaders; ACStructures!$1:$1;
   dbRows; ACStructures!$2:$1000;
@@ -36,4 +36,4 @@ formula = """
 
   VSTACK(outputHeaders; outputRows)
 )
-"""
+'''

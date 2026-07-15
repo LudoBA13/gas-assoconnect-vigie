@@ -1,7 +1,7 @@
 type = "warning"
 description = "Partenaires dont l'habilitation régionale est incorrectement configurée. Le statut de l'habilitation régionale 'Oui'/'Non' doit être cohérent avec la présence d'une date de fin d'habilitation."
 message = "Habilitation régionale incohérente. Statut : '{3}'. Date : '{4, date, dd/mm/yyyy}'."
-formula = """
+formula = '''
 =LET(
   dbHeaders; ACStructures!$1:$1;
   dbRows;    ACStructures!$2:$1000;
@@ -23,4 +23,4 @@ formula = """
 
   VSTACK(outputHeaders; outputRows)
 )
-"""
+'''

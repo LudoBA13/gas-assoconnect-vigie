@@ -1,7 +1,7 @@
 type = "issue"
 description = "Partenaires qui ne possèdent pas d'habilitation valide. Sont exclus : CCAS/CIAS, membres d'un réseau ayant une habilitation nationale, partenaires ayant une habilitation régionale valide."
 message = "Absence d'habilitation valide."
-formula = """
+formula = '''
 =LET(
   dbHeaders; ACStructures!$1:$1;
   dbRows;    ACStructures!$2:$1000;
@@ -29,4 +29,4 @@ formula = """
 
   VSTACK(outputHeaders; outputRows)
 )
-"""
+'''

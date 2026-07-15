@@ -1,7 +1,7 @@
 type = "warning"
 description = "Partenaires qui souhaitent recevoir des produits surgelés mais n'ont ni congélateurs ni chambres froides négatives dans leur liste d'équipement."
 message = "Souhaite recevoir du surgelé sans stockage à température négative."
-formula = """
+formula = '''
 =LET(
   dbHeaders; ACStructures!$1:$1;
   dbRows;    ACStructures!$2:$1000;
@@ -22,4 +22,4 @@ formula = """
 
   VSTACK(outputHeaders; outputRows)
 )
-"""
+'''

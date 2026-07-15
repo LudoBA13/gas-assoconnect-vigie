@@ -1,7 +1,7 @@
 type = "issue"
 description = "Partenaires qui reçoivent des produits CNES de la BA mais ne sont pas type épicerie sociale."
 message = "Reçoit des produits CNES mais n'est pas une épicerie sociale."
-formula = """
+formula = '''
 =LET(
   dbHeaders; ACStructures!$1:$1;
   dbRows;    ACStructures!$2:$1000;
@@ -22,4 +22,4 @@ formula = """
 
   VSTACK(outputHeaders; outputRows)
 )
-"""
+'''

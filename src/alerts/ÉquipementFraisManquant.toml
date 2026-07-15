@@ -1,7 +1,7 @@
 type = "warning"
 description = "Partenaires qui souhaitent recevoir des produits frais mais n'ont ni réfrigérateurs ni chambres froides positives dans leur liste d'équipement."
 message = "Souhaite recevoir du frais sans stockage réfrigéré."
-formula = """
+formula = '''
 =LET(
   dbHeaders; ACStructures!$1:$1;
   dbRows;    ACStructures!$2:$1000;
@@ -22,4 +22,4 @@ formula = """
 
   VSTACK(outputHeaders; outputRows)
 )
-"""
+'''
