@@ -1,5 +1,5 @@
 type = "issue"
-description = "Partenaires dont la convention est antérieure à 5 ans."
+description = "Partenaires dont la convention est antérieure à 5 ans. Sont exclus les partenaires du réseau Croix Rouge."
 message = "La dernière signature de la convention est antérieure à 5 ans. ({3, date, dd/mm/yyyy})"
 formula = '''
 =LET(
@@ -11,12 +11,14 @@ formula = '''
 
   cutoffDate; EDATE(TODAY(); -60);
 
-  typeCol; INDEX(dbRows; 0; MATCH("Type de structure"; dbHeaders; 0));
-  dateCol; INDEX(dbRows; 0; MATCH("Date de la dernière signature de la convention / du contrat"; dbHeaders; 0));
+  typeCol;    INDEX(dbRows; 0; MATCH("Type de structure"; dbHeaders; 0));
+  dateCol;    INDEX(dbRows; 0; MATCH("Date de la dernière signature de la convention / du contrat"; dbHeaders; 0));
+  networkCol; INDEX(dbRows; 0; MATCH("Appartient-il à un grand réseau ayant une habilitation nationale ?"; dbHeaders; 0));
 
   outputRows; FILTER(
     CHOOSECOLS(dbRows; outputIndexes);
     ISNUMBER(FIND("1_Partenaire"; typeCol));
+    networkCol <> "Croix Rouge";
     dateCol <= cutoffDate
   );
 
