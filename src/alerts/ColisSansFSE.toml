@@ -1,6 +1,6 @@
 type = "info"
 description = "Partenaires éligibles au FSE+ dont le mode de distribution est colis ou repas mais qui ne reçoivent pas de produits FSE+."
-message = "Distribution de type '$3' mais ne reçoit pas de FSE+."
+message = "Distribution de type '{3}' mais ne reçoit pas de FSE+."
 formula = '''
 =LET(
   dbHeaders; ACStructures!$1:$1;
