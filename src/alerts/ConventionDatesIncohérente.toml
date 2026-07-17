@@ -1,6 +1,6 @@
 type = "warning"
 description = "Partenaires dont les dates de signature de convention sont incohérentes."
-message = "Les dates de signature de convention sont incohérente. Initiale : {3, date, dd/mm/yyyy}. Dernière : {4, date, dd/mm/yyyy}"
+message = "Les dates de signature de convention sont incohérente. Initiale : {3, date, dd/mm/yyyy}. Dernière : {4, date, dd/mm/yyyy}."
 formula = '''
 =LET(
   dbHeaders; ACStructures!$1:$1;
