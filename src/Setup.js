@@ -259,7 +259,7 @@ function generateMasterFormula()
 		carColIdx; MATCH("Interlocuteur principal dans la BA (nom, fonction)"; ACStructures!$1:$1; 0);
 		data; ${dataFormula};
 		carCol; ARRAYFORMULA(XLOOKUP(INDEX(data;; 2); ACStructures!$A:$A; INDEX(ACStructures!$A:$Z;; carColIdx)));
-		VSTACK({"Alerte" \\ "ID du Contact" \\ "Nom" \\ "Message" \\ "Interlocuteur principal"}; HSTACK(data; carCol))
+		VSTACK({"CAR" \\ "Alerte" \\ "ID du Contact" \\ "Nom" \\ "Message"}; HSTACK(carCol; data))
 	)`;
 
 	return formula;
