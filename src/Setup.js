@@ -251,11 +251,11 @@ function generateMasterFormula()
 		)`.replaceAll('\n\t\t', '\n').replaceAll('\t', '  ');
 	});
 
-	// Start with headers
-	let formula = '=VSTACK({"Alerte" \\ "ID du Contact" \\ "Nom" \\ "Message" }; ';
+	// Create the formula for stacking then sorting data
+	const dataFormula = `SORT(VSTACK(${parts.join(';\n')}); 3; TRUE; 1; TRUE)`
 
-	// Sort then stack the rows
-	formula += `SORT(VSTACK(${parts.join(';\n')}); 3; TRUE; 1; TRUE))`;
+	// Start the master formula with the headers, then add the data
+	const formula = `=VSTACK({"Alerte" \\ "ID du Contact" \\ "Nom" \\ "Message" }; ${dataFormula})`;
 
 	return formula;
 }
