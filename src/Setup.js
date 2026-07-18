@@ -195,7 +195,7 @@ function generateMessageFormula(message, varName)
 		}
 
 		const colIdx = parseInt(part.substring(1));
-		let formula = `INDEX(${varName}; r; ${colIdx})`;
+		let formula = `INDEX(${varName}; 0; ${colIdx})`;
 
 		// Convert placeholders in the ICU format {1, date, yyyy-MM-dd}
 		// That's the only feature supported, others may be supported as required
@@ -208,61 +208,66 @@ function generateMessageFormula(message, varName)
 		return formula;
 	});
 
-	const messageFormula = messageParts.join(' & ');
+	const messageFormula = `INDEX(${messageParts.join(' & ')})`;
 
 	return messageFormula;
 }
 
-function generateAlertColumnsFormula(alert)
+function generateAlertColumnFormula(str, varName)
 {
-	const varName = 'data';
-
-	// Static messages can be built simply
-	if (!alert.message.includes('{'))
+	// Static string can be built simply
+	if (!str.includes('{'))
 	{
-		return `IF(SEQUENCE(ROWS(${varName})); { "${alert.name}" \\ "${alert.message.replaceAll('"', '""')}" })`;
+		return `INDEX(IF(SEQUENCE(ROWS(${varName})); "${str.replaceAll('"', '""')}"))`;
 	}
 
-	const messageFormula = generateMessageFormula(alert.message, varName);
+	const messageFormula = generateMessageFormula(str, varName);
 
-	return `MAKEARRAY(ROWS(${varName}); 1; LAMBDA(r; c; { "${alert.name}" \\ ${messageFormula} }))`;
+	return messageFormula;
 }
 
 function generateMasterFormula()
 {
+	const varName = 'alertData';
 	const alerts = getAlerts();
 	const parts = alerts.map(alert =>
 	{
-		const alertColumnsFormula = generateAlertColumnsFormula(alert);
+		const alertNameFormula = generateAlertColumnFormula(alert.name,    varName);
+		const alertMsgFormula  = generateAlertColumnFormula(alert.message, varName);
+		const alertDataFormula = (alert.formula.includes('{ "ID du Contact" \\ "Nom" }')) ? varName : `TAKE(${varName}; ; 2)`;
 
 		return `IF(
 			ISNA('${alert.sheetName}'!$A$2);
 			TOCOL(; 1);
 			LET(
-				data; FILTER('${alert.sheetName}'!$A$2:$Z; '${alert.sheetName}'!$A$2:$A <> "");
-				CHOOSECOLS(
-					HSTACK(
-						${alertColumnsFormula};
-						data
-					);
-					1; 3; 4; 2
+				alertData; FILTER('${alert.sheetName}'!$A$2:$Z; '${alert.sheetName}'!$A$2:$A <> "");
+				HSTACK(
+					${alertNameFormula};
+					CHOOSECOLS(alertData; 1; 2);
+					${alertMsgFormula}
 				)
 			)
-		)`.replaceAll('\n\t\t', '\n').replaceAll('\t', '  ');
+		)`;
 	});
 
-	// Create the formula for stacking then sorting data
-	const dataFormula = `SORT(VSTACK(${parts.join(';\n')}); 3; TRUE; 1; TRUE)`;
+	// Stack the data from all alerts
+	const alertsFormula = `VSTACK(${parts.join(';\n')})`;
+
+	// Join the CAR column then sort the result (CAR, Nom, Alerte)
+	const dataFormula = `SORT(HSTACK(carCol; alertsData); 1; TRUE; 4; TRUE; 2; TRUE)`;
 
 	// Start the master formula with the headers, then add the data
 	const formula = `=LET(
-		carColIdx; MATCH("Interlocuteur principal dans la BA (nom, fonction)"; ACStructures!$1:$1; 0);
-		data; ${dataFormula};
-		carCol; ARRAYFORMULA(XLOOKUP(INDEX(data;; 2); ACStructures!$A:$A; INDEX(ACStructures!$A:$Z;; carColIdx)));
-		VSTACK({"CAR" \\ "Alerte" \\ "ID du Contact" \\ "Nom" \\ "Message"}; HSTACK(carCol; data))
+		headers;    { "CAR" \\ "Alerte" \\ "ID du Contact" \\ "Nom" \\ "Message" };
+		alertsData; ${alertsFormula};
+		carColIdx;  MATCH("Interlocuteur principal dans la BA (nom, fonction)"; ACStructures!$1:$1; 0);
+		carCol;     ARRAYFORMULA(XLOOKUP(INDEX(alertsData;; 2); ACStructures!$A:$A; INDEX(ACStructures!$A:$Z;; carColIdx)));
+		data;       ${dataFormula};
+
+		VSTACK(headers; data)
 	)`;
 
-	return formula;
+	return formula.replaceAll("\n\t", "\n").replaceAll("\t", '  ');
 }
 
 if (typeof module !== 'undefined') {
