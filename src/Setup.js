@@ -252,10 +252,15 @@ function generateMasterFormula()
 	});
 
 	// Create the formula for stacking then sorting data
-	const dataFormula = `SORT(VSTACK(${parts.join(';\n')}); 3; TRUE; 1; TRUE)`
+	const dataFormula = `SORT(VSTACK(${parts.join(';\n')}); 3; TRUE; 1; TRUE)`;
 
 	// Start the master formula with the headers, then add the data
-	const formula = `=VSTACK({"Alerte" \\ "ID du Contact" \\ "Nom" \\ "Message" }; ${dataFormula})`;
+	const formula = `=LET(
+		carColIdx; MATCH("Interlocuteur principal dans la BA (nom, fonction)"; ACStructures!$1:$1; 0);
+		data; ${dataFormula};
+		carCol; ARRAYFORMULA(XLOOKUP(INDEX(data;; 2); ACStructures!$A:$A; INDEX(ACStructures!$A:$Z;; carColIdx)));
+		VSTACK({"Alerte" \\ "ID du Contact" \\ "Nom" \\ "Message" \\ "Interlocuteur principal"}; HSTACK(data; carCol))
+	)`;
 
 	return formula;
 }
