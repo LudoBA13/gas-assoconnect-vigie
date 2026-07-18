@@ -26,7 +26,7 @@ function updateIndexSheet()
 		return;
 	}
 
-	const formula = generateMasterFormula();
+	const formula = getMasterFormula();
 	const a1Cell = sheet.getRange('A1');
 	
 	if (a1Cell.getFormula() !== formula)
