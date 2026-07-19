@@ -253,8 +253,8 @@ function generateMasterFormula()
 	// Stack the data from all alerts
 	const alertsFormula = `VSTACK(${parts.join(';\n')})`;
 
-	// Join the CAR column then sort the result (CAR, Nom, Alerte)
-	const dataFormula = `SORT(HSTACK(carCol; alertsData); 1; TRUE; 4; TRUE; 2; TRUE)`;
+	// Join the CAR column then sort the result (Nom, Alerte, CAR)
+	const dataFormula = `SORT(HSTACK(carCol; alertsData); 4; TRUE; 2; TRUE; 1; TRUE)`;
 
 	// Start the master formula with the headers, then add the data
 	const formula = `=LET(
