@@ -9,7 +9,6 @@ formula = '''
   outputHeaders; { "ID du Contact" \ "Nom" \ "Date de la signature initiale de la convention / du contrat" \ "Date de la dernière signature de la convention / du contrat" };
   outputIndexes; BYCOL(outputHeaders; LAMBDA(colName; MATCH(colName; dbHeaders; 0)));
 
-
   typeCol;  INDEX(dbRows; 0; MATCH("Type de structure"; dbHeaders; 0));
   firstCol; INDEX(dbRows; 0; MATCH("Date de la signature initiale de la convention / du contrat"; dbHeaders; 0));
   lastCol;  INDEX(dbRows; 0; MATCH("Date de la dernière signature de la convention / du contrat"; dbHeaders; 0));
