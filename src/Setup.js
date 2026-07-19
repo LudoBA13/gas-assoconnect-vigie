@@ -92,6 +92,7 @@ function createAlertIndexSheet()
 	if (!sheet)
 	{
 		sheet = ss.insertSheet('Alerts');
+		sheet.hideSheet();
 	}
 
 	setSheetSize(sheet, 40, 4);
@@ -126,6 +127,7 @@ function createAlertSheets()
 		if (!sheet)
 		{
 			sheet = ss.insertSheet(sheetName);
+			sheet.hideSheet();
 		}
 
 		const a1Cell = sheet.getRange('A1');
