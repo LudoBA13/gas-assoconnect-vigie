@@ -1,5 +1,5 @@
 type = "issue"
-description = "Partenaires qui reçoivent des produits CNES de la BA mais ne sont pas type épicerie sociale."
+description = "Partenaires qui reçoivent des produits CNES de la BA mais ne sont pas de type épicerie sociale."
 message = "Reçoit des produits CNES mais n'est pas une épicerie sociale."
 formula = '''
 =LET(
