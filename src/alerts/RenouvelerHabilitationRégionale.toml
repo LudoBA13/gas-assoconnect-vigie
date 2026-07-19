@@ -22,7 +22,7 @@ formula = '''
     ISNUMBER(FIND("1_Partenaire"; typeCol));
     dateCol >= minDate;
     dateCol <= maxDate;
-    networkCol = "1- NON";
+    (networkCol = "1- NON") + (networkCol = "");
     statusCol <> "CCAS/CIAS"
   );
 
