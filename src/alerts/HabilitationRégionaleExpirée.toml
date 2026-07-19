@@ -21,7 +21,7 @@ formula = '''
     ISNUMBER(FIND("1_Partenaire"; typeCol));
     dateCol > 0;
     dateCol <= cutoffDate;
-    networkCol = "1- NON";
+    (networkCol = "1- NON") + (networkCol = "");
     statusCol <> "CCAS/CIAS"
   );
 
