@@ -71,9 +71,12 @@ function createIndexSheet()
 		return;
 	}
 
-	sheet = ss.insertSheet('Index', 0);
+	sheet.insertSheet('Index', 0);
 	sheet.setFrozenRows(1);
-	sheet.setColumnWidths(1, 4, [140, 70, 240, 480]);
+	sheet.setColumnWidth(1, 140);
+	sheet.setColumnWidth(2, 70);
+	sheet.setColumnWidth(3, 240);
+	sheet.setColumnWidth(4, 480);
 	setSheetSize(sheet, 200, 4);
 
 	const headerRange = sheet.getRange(1, 1, 1, 4);
