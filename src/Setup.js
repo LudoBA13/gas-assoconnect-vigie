@@ -93,9 +93,8 @@ function createAlertIndexSheet()
 	{
 		sheet = ss.insertSheet('Alerts');
 		sheet.hideSheet();
+		setSheetSize(sheet, 40, 4);
 	}
-
-	setSheetSize(sheet, 40, 4);
 
 	const alerts = getAlerts();
 	const data = [["Name", "Type", "Description", "Sheet Name"]];
@@ -137,9 +136,8 @@ function createAlertSheets()
 		{
 			a1Cell.setFormula(alert.formula);
 			SpreadsheetApp.flush();
+			resizeSheet(sheet);
 		}
-
-		resizeSheet(sheet);
 	});
 }
 
