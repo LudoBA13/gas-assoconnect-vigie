@@ -1,6 +1,6 @@
 type = "info"
 description = ""
-message = "Pas d'interlocuteur RHYSA renseigné."
+message = "Pas de RHYSA renseigné."
 formula = '''
 =LET(
   dbHeaders; ACStructures!$1:$1;
