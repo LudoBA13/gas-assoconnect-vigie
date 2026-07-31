@@ -1,0 +1,25 @@
+type = "issue"
+description = "Partenaires dont la dernière visite est antérieure à 1 an."
+message = "La dernière visite est antérieure à 1 an. ({3, date, dd/mm/yyyy})"
+formula = '''
+=LET(
+  dbHeaders; ACStructures!$1:$1;
+  dbRows;    ACStructures!$2:$1000;
+
+  outputHeaders; { "ID du Contact" \ "Nom" \ "Date de la dernière visite" };
+  outputIndexes; BYCOL(outputHeaders; LAMBDA(colName; MATCH(colName; dbHeaders; 0)));
+
+  cutoffDate; EDATE(TODAY(); -12);
+
+  typeCol;    INDEX(dbRows; 0; MATCH("Type de structure"; dbHeaders; 0));
+  dateCol;    INDEX(dbRows; 0; MATCH("Date de la dernière visite"; dbHeaders; 0));
+
+  outputRows; FILTER(
+    CHOOSECOLS(dbRows; outputIndexes);
+    ISNUMBER(FIND("1_Partenaire"; typeCol));
+    dateCol <= cutoffDate
+  );
+
+  VSTACK(outputHeaders; outputRows)
+)
+'''
