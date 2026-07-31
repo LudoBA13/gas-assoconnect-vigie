@@ -4,6 +4,54 @@ function setUpSheets()
 	setUpIndexSheet();
 }
 
+/**
+ * Updates all existing filter views across all sheets in the active spreadsheet
+ * to make their ranges open-ended by removing the fixed bottom row index.
+ *
+ * Pre-condition: Requires the "Google Sheets API" Advanced Service to be enabled.
+ */
+function makeAllFilterViewsOpenEnded()
+{
+	const spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+	const spreadsheetId = spreadsheet.getId();
+
+	const spreadsheetMetadata = Sheets.Spreadsheets.get(spreadsheetId, {
+		viewsToInclude: ["METADATA"]
+	});
+
+	const requests = [];
+
+	if (spreadsheetMetadata.sheets)
+	{
+		spreadsheetMetadata.sheets.forEach(sheet =>
+		{
+			if (sheet.filterViews)
+			{
+				sheet.filterViews.forEach(view =>
+				{
+					const updatedRange = Object.assign({}, view.range);
+					delete updatedRange.endRowIndex;
+
+					requests.push({
+						updateFilterView: {
+							filter: {
+								filterViewId: view.filterViewId,
+								range: updatedRange
+							},
+							fields: "range.endRowIndex"
+						}
+					});
+				});
+			}
+		});
+	}
+
+	if (requests.length > 0)
+	{
+		Sheets.Spreadsheets.batchUpdate({ requests: requests }, spreadsheetId);
+	}
+}
+
 function setUpAlertSheets()
 {
 	createAlertSheets();
@@ -28,7 +76,7 @@ function updateIndexSheet()
 
 	const formula = getMasterFormula();
 	const a1Cell = sheet.getRange('A1');
-	
+
 	if (a1Cell.getFormula() !== formula)
 	{
 		a1Cell.setFormula(formula);
