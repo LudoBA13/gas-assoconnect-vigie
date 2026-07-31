@@ -12,12 +12,9 @@ formula = '''
   idCol;   INDEX(dbRows; 0; MATCH("ID du Contact"; dbHeaders; 0));
   typeCol; INDEX(dbRows; 0; MATCH("Type de structure"; dbHeaders; 0));
 
-  blacklistedIds; IFERROR(
-    FILTER(
-      ACPersonnes_Structures!$C$2:$C;
-      ISNUMBER(FIND("Président"; ACPersonnes_Structures!$D$2:$D))
-    );
-    ""
+  blacklistedIds; FILTER(
+    ACPersonnes_Structures!$C$2:$C;
+    ISNUMBER(FIND("Président"; ACPersonnes_Structures!$D$2:$D))
   );
 
   outputRows; FILTER(
