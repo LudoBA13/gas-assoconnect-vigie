@@ -15,9 +15,7 @@ function makeAllFilterViewsOpenEnded()
 	const spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
 	const spreadsheetId = spreadsheet.getId();
 
-	const spreadsheetMetadata = Sheets.Spreadsheets.get(spreadsheetId, {
-		viewsToInclude: ["METADATA"]
-	});
+	const spreadsheetMetadata = Sheets.Spreadsheets.get(spreadsheetId);
 
 	const requests = [];
 
