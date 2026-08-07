@@ -85,7 +85,7 @@ function getAlerts()
 		"name": "SansRelationPrésident",
 		"sheetName": "Alert-SansRelationPrésident",
 		"type": "info",
-		"description": "",
+		"description": "Partenaires sans Président.",
 		"message": "Pas de président renseigné.",
 		"formula": "=LET(\n  dbHeaders; ACStructures!$1:$1;\n  dbRows;    ACStructures!$2:$1000;\n\n  outputHeaders; { \"ID du Contact\" \\ \"Nom\" };\n  outputIndexes; BYCOL(outputHeaders; LAMBDA(colName; MATCH(colName; dbHeaders; 0)));\n\n  idCol;   INDEX(dbRows; 0; MATCH(\"ID du Contact\"; dbHeaders; 0));\n  typeCol; INDEX(dbRows; 0; MATCH(\"Type de structure\"; dbHeaders; 0));\n\n  blacklistedIds; FILTER(\n    ACPersonnes_Structures!$C$2:$C;\n    ISNUMBER(FIND(\"Président\"; ACPersonnes_Structures!$D$2:$D))\n  );\n\n  outputRows; FILTER(\n    CHOOSECOLS(dbRows; outputIndexes);\n    ISNUMBER(FIND(\"1_Partenaire\"; typeCol));\n    ISNA(XMATCH(idCol; blacklistedIds))\n  );\n\n  VSTACK(outputHeaders; outputRows)\n)\n"
 	},
@@ -93,7 +93,7 @@ function getAlerts()
 		"name": "SansRelationRHYSA",
 		"sheetName": "Alert-SansRelationRHYSA",
 		"type": "info",
-		"description": "",
+		"description": "Partenaires sans RHYSA.",
 		"message": "Pas de RHYSA renseigné.",
 		"formula": "=LET(\n  dbHeaders; ACStructures!$1:$1;\n  dbRows;    ACStructures!$2:$1000;\n\n  outputHeaders; { \"ID du Contact\" \\ \"Nom\" };\n  outputIndexes; BYCOL(outputHeaders; LAMBDA(colName; MATCH(colName; dbHeaders; 0)));\n\n  idCol;   INDEX(dbRows; 0; MATCH(\"ID du Contact\"; dbHeaders; 0));\n  typeCol; INDEX(dbRows; 0; MATCH(\"Type de structure\"; dbHeaders; 0));\n\n  blacklistedIds; FILTER(\n      ACPersonnes_Structures!$C$2:$C;\n      ISNUMBER(FIND(\"RHYSA\"; ACPersonnes_Structures!$D$2:$D))\n  );\n\n  outputRows; FILTER(\n    CHOOSECOLS(dbRows; outputIndexes);\n    ISNUMBER(FIND(\"1_Partenaire\"; typeCol));\n    ISNA(XMATCH(idCol; blacklistedIds))\n  );\n\n  VSTACK(outputHeaders; outputRows)\n)\n"
 	},

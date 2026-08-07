@@ -1,5 +1,5 @@
 type = "info"
-description = ""
+description = "Partenaires sans Président."
 message = "Pas de président renseigné."
 formula = '''
 =LET(

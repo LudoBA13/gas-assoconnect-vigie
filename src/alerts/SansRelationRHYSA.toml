@@ -1,5 +1,5 @@
 type = "info"
-description = ""
+description = "Partenaires sans RHYSA."
 message = "Pas de RHYSA renseigné."
 formula = '''
 =LET(
