@@ -17,7 +17,7 @@ formula = '''
     CHOOSECOLS(dbRows; outputIndexes);
     ISNUMBER(FIND("1_Partenaire"; typeCol));
     ISNUMBER(FIND("Surgelé"; prodCol));
-    NOT(REGEXMATCH("Chambre froide négative|Congélateur"; equipCol))
+    NOT(REGEXMATCH(equipCol; "Chambre froide négative|Congélateur"))
   );
 
   VSTACK(outputHeaders; outputRows)
