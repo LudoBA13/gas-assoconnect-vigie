@@ -1,5 +1,5 @@
 type = "info"
-description = "Partenaires dont la convention aura 5 ans dans les 6 prochains mois."
+description = "Partenaires dont la convention aura 5 ans dans les 6 prochains mois. Sont exclus les partenaires du réseau Croix Rouge."
 message = "La convention doit être renouvelée bientôt. (dernière signature : {3, date, dd/mm/yyyy})"
 formula = '''
 =LET(
@@ -14,10 +14,12 @@ formula = '''
 
   typeCol; INDEX(dbRows; 0; MATCH("Type de structure"; dbHeaders; 0));
   dateCol; INDEX(dbRows; 0; MATCH("Date de la dernière signature de la convention / du contrat"; dbHeaders; 0));
+  networkCol; INDEX(dbRows; 0; MATCH("Appartient-il à un grand réseau ayant une habilitation nationale ?"; dbHeaders; 0));
 
   outputRows; FILTER(
     CHOOSECOLS(dbRows; outputIndexes);
     ISNUMBER(FIND("1_Partenaire"; typeCol));
+    networkCol <> "Croix Rouge";
     dateCol >= minDate;
     dateCol <= maxDate
   );

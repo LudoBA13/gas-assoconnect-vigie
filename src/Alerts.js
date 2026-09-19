@@ -61,9 +61,9 @@ function getAlerts()
 		"name": "RenouvelerConvention",
 		"sheetName": "Alert-RenouvelerConvention",
 		"type": "info",
-		"description": "Partenaires dont la convention aura 5 ans dans les 6 prochains mois.",
+		"description": "Partenaires dont la convention aura 5 ans dans les 6 prochains mois. Sont exclus les partenaires du réseau Croix Rouge.",
 		"message": "La convention doit être renouvelée bientôt. (dernière signature : {3, date, dd/mm/yyyy})",
-		"formula": "=LET(\n  dbHeaders; ACStructures!$1:$1;\n  dbRows;    ACStructures!$2:$1000;\n\n  outputHeaders; { \"ID du Contact\" \\ \"Nom\" \\ \"Date de la dernière signature de la convention / du contrat\" };\n  outputIndexes; BYCOL(outputHeaders; LAMBDA(colName; MATCH(colName; dbHeaders; 0)));\n\n  minDate; EDATE(TODAY(); -60);\n  maxDate; EDATE(TODAY(); -54);\n\n  typeCol; INDEX(dbRows; 0; MATCH(\"Type de structure\"; dbHeaders; 0));\n  dateCol; INDEX(dbRows; 0; MATCH(\"Date de la dernière signature de la convention / du contrat\"; dbHeaders; 0));\n\n  outputRows; FILTER(\n    CHOOSECOLS(dbRows; outputIndexes);\n    ISNUMBER(FIND(\"1_Partenaire\"; typeCol));\n    dateCol >= minDate;\n    dateCol <= maxDate\n  );\n\n  VSTACK(outputHeaders; outputRows)\n)\n"
+		"formula": "=LET(\n  dbHeaders; ACStructures!$1:$1;\n  dbRows;    ACStructures!$2:$1000;\n\n  outputHeaders; { \"ID du Contact\" \\ \"Nom\" \\ \"Date de la dernière signature de la convention / du contrat\" };\n  outputIndexes; BYCOL(outputHeaders; LAMBDA(colName; MATCH(colName; dbHeaders; 0)));\n\n  minDate; EDATE(TODAY(); -60);\n  maxDate; EDATE(TODAY(); -54);\n\n  typeCol; INDEX(dbRows; 0; MATCH(\"Type de structure\"; dbHeaders; 0));\n  dateCol; INDEX(dbRows; 0; MATCH(\"Date de la dernière signature de la convention / du contrat\"; dbHeaders; 0));\n  networkCol; INDEX(dbRows; 0; MATCH(\"Appartient-il à un grand réseau ayant une habilitation nationale ?\"; dbHeaders; 0));\n\n  outputRows; FILTER(\n    CHOOSECOLS(dbRows; outputIndexes);\n    ISNUMBER(FIND(\"1_Partenaire\"; typeCol));\n    networkCol <> \"Croix Rouge\";\n    dateCol >= minDate;\n    dateCol <= maxDate\n  );\n\n  VSTACK(outputHeaders; outputRows)\n)\n"
 	},
 	{
 		"name": "RenouvelerHabilitationRégionale",
