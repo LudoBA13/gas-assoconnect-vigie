@@ -119,7 +119,7 @@ function createIndexSheet()
 		return;
 	}
 
-	sheet.insertSheet(INDEX_SHEET_NAME, 0);
+	sheet = ss.insertSheet(INDEX_SHEET_NAME, 0);
 	sheet.setFrozenRows(1);
 	sheet.setColumnWidth(1, 140);
 	sheet.setColumnWidth(2, 70);
