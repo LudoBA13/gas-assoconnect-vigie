@@ -1,3 +1,5 @@
+const INDEX_SHEET_NAME = '\u{1F441}\u{FE0F}\u{200D}\u{1F5E8}\u{FE0F} Alertes';
+
 function setUpSheets()
 {
 	setUpAlertSheets();
@@ -66,7 +68,7 @@ function setUpIndexSheet()
 function updateIndexSheet()
 {
 	const ss = SpreadsheetApp.getActiveSpreadsheet();
-	const sheet = ss.getSheetByName('Index');
+	const sheet = ss.getSheetByName(INDEX_SHEET_NAME);
 	if (!sheet)
 	{
 		return;
@@ -110,14 +112,14 @@ function setSheetSize(sheet, rows, columns)
 function createIndexSheet()
 {
 	const ss = SpreadsheetApp.getActiveSpreadsheet();
-	let sheet = ss.getSheetByName('Index');
+	let sheet = ss.getSheetByName(INDEX_SHEET_NAME);
 
 	if (sheet)
 	{
 		return;
 	}
 
-	sheet.insertSheet('Index', 0);
+	sheet.insertSheet(INDEX_SHEET_NAME, 0);
 	sheet.setFrozenRows(1);
 	sheet.setColumnWidth(1, 140);
 	sheet.setColumnWidth(2, 70);
