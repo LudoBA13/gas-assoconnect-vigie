@@ -1,0 +1,25 @@
+type = "issue"
+description = "Partenaires faisant partie d'un réseau national mais catégorisé incorrectement."
+message = "Fait partie du réseau {3} mais catégorisé en {4}."
+formula = '''
+=LET(
+  dbHeaders; ACStructures!$1:$1;
+  dbRows;    ACStructures!$2:$1000;
+
+  outputHeaders; { "ID du Contact" \ "Nom" \ "Date de la dernière signature de la convention / du contrat" \ "Catégorie du partenaire" };
+  outputIndexes; BYCOL(outputHeaders; LAMBDA(colName; MATCH(colName; dbHeaders; 0)));
+
+  typeCol;    INDEX(dbRows; 0; MATCH("Type de structure"; dbHeaders; 0));
+  networkCol; INDEX(dbRows; 0; MATCH("Appartient-il à un grand réseau ayant une habilitation nationale ?"; dbHeaders; 0));
+  categoryCol; INDEX(dbRows; 0; MATCH("Catégorie du partenaire"; dbHeaders; 0));
+
+  outputRows; FILTER(
+    CHOOSECOLS(dbRows; outputIndexes);
+    ISNUMBER(FIND("1_Partenaire"; typeCol));
+    (networkCol <> "") * (networkCol <> "1- NON");
+    categoryCol <> "Catégorie 2"
+  );
+
+  VSTACK(outputHeaders; outputRows)
+)
+'''
