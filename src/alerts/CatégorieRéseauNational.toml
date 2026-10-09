@@ -1,5 +1,5 @@
 type = "issue"
-description = "Partenaires faisant partie d'un réseau national mais catégorisé incorrectement."
+description = "Partenaires faisant partie d'un réseau de Catégorie 2 mais catégorisé incorrectement."
 message = "Fait partie du réseau {3} mais catégorisé en {4}."
 formula = '''
 =LET(
@@ -16,7 +16,7 @@ formula = '''
   outputRows; FILTER(
     CHOOSECOLS(dbRows; outputIndexes);
     ISNUMBER(FIND("1_Partenaire"; typeCol));
-    (networkCol <> "") * (networkCol <> "1- NON");
+    (networkCol = "ANDES (Solidarité Alimentaire France)") + (networkCol = "Croix Rouge") + (networkCol = "Restos du Cœur") + (networkCol = "Secours Populaire") + (networkCol = "UGESS (Union des groupements des Epiceries Sociales et Solidaires)");
     categoryCol <> "Catégorie 2"
   );
 
