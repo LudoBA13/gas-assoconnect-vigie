@@ -1,0 +1,25 @@
+type = "issue"
+description = "Partenaires renseignés en Catégorie 2 mais ne faisant pas partie d'un réseau reconnu."
+message = "Catégorisé en Catégorie 2 mais ne fait pas partie d'un réseau reconnu."
+formula = '''
+=LET(
+  dbHeaders; ACStructures!$1:$1;
+  dbRows;    ACStructures!$2:$1000;
+
+  outputHeaders; { "ID du Contact" \ "Nom" };
+  outputIndexes; BYCOL(outputHeaders; LAMBDA(colName; MATCH(colName; dbHeaders; 0)));
+
+  typeCol;    INDEX(dbRows; 0; MATCH("Type de structure"; dbHeaders; 0));
+  networkCol; INDEX(dbRows; 0; MATCH("Appartient-il à un grand réseau ayant une habilitation nationale ?"; dbHeaders; 0));
+  categoryCol; INDEX(dbRows; 0; MATCH("Catégorie du partenaire"; dbHeaders; 0));
+
+  outputRows; FILTER(
+    CHOOSECOLS(dbRows; outputIndexes);
+    ISNUMBER(FIND("1_Partenaire"; typeCol));
+    NOT(REGEXMATCH(networkCol; "^(ANDES|Croix Rouge|Restos du Cœur|Secours Populaire|UGESS)"));
+    categoryCol = "Catégorie 2"
+  );
+
+  VSTACK(outputHeaders; outputRows)
+)
+'''
