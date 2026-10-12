@@ -1,6 +1,6 @@
-type = "issue"
-description = "Partenaires faisant partie du réseau Andès ou UGESS mais ne sont pas de type épicerie sociale."
-message = "Fait partie du réseau {3} mais n'est pas une épicerie sociale."
+type = "warning"
+description = "Partenaires faisant partie du réseau Andès ou UGESS mais ne sont pas de type épicerie sociale. Sont exclus les partenaires rattachés au Groupe SOS Solidarités."
+message = "Fait partie du réseau {3} mais n'est pas une épicerie sociale et ne fait pas partie de Groupe SOS Solidarités."
 formula = '''
 =LET(
   dbHeaders; ACStructures!$1:$1;
@@ -10,14 +10,18 @@ formula = '''
   outputIndexes; BYCOL(outputHeaders; LAMBDA(colName; MATCH(colName; dbHeaders; 0)));
 
   typeCol;    INDEX(dbRows; 0; MATCH("Type de structure"; dbHeaders; 0));
+  siretCol;   INDEX(dbRows; 0; MATCH("Siret"; dbHeaders; 0));
   modesCol;   INDEX(dbRows; 0; MATCH("Modes de distribution de l'aide alimentaire"; dbHeaders; 0));
   networkCol; INDEX(dbRows; 0; MATCH("Appartient-il à un grand réseau ayant une habilitation nationale ?"; dbHeaders; 0));
+
+  siretVal;   MAP(siretCol; LAMBDA(v; IFERROR(VALUE(v); 0)));
 
   outputRows; FILTER(
     CHOOSECOLS(dbRows; outputIndexes);
     ISNUMBER(FIND("1_Partenaire"; typeCol));
     ISERR(FIND("Epicerie Sociale"; modesCol));
-    REGEXMATCH(networkCol; "^ANDES|^UGESS")
+    REGEXMATCH(networkCol; "^ANDES|^UGESS");
+    (siretVal < 34106240400000) + (siretVal > 34106240499999)
   );
 
   VSTACK(outputHeaders; outputRows)
